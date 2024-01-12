@@ -1,0 +1,164 @@
+
+
+
+{% for block in section.blocks %}
+  {% case block.type %}
+   {% when 'Gallery' %}
+
+ {% if block.settings.page == page.handle %}
+
+<div class="gallery-grid"  data-masonry='{ "itemSelector": ".gallery-item"}'>
+   {% for i in (1..20) %}
+     {% assign image = 'image' | append: i %}
+      {% if block.settings[image] != nil %}
+      {% assign test = i | modulo: 2 %}
+      {% assign test2 = i | modulo: 5 %}
+      <div class="gallery-item {% if test == 0 %}gallery-item--height2{% endif %}{% if test2 == 0 %}gallery-item--height3{% endif %}">
+      <a href="{{ block.settings[image] | img_url: 'master' }}" data-fancybox="{{ block.settings.page }}">
+        <img class="" src="{{ block.settings[image] | img_url: 'large' }}" />
+      </a>
+      </div>
+     {% endif %}
+    {% endfor %}
+</div>
+  
+  {% endif %}
+
+  {% endcase %}
+{% endfor %} 
+
+
+
+
+{% schema %}
+  {
+    "name": "Gallery",
+    "settings": [],
+    "blocks": [ {
+     "type": "Gallery",
+     "name": "Gallery",
+     "settings" : [
+{
+ "type": "header",
+ "content": "Assign Page"
+},
+{
+"type": "page",
+"id": "page",
+"label": "Page",
+"info" : "Page must be assigned the gallery template"
+},
+{
+ "type": "header",
+ "content": "Add Images"
+},
+{
+       "id": "image1",
+       "type": "image_picker",
+       "label": "Image"
+},
+{
+       "id": "image2",
+       "type": "image_picker",
+       "label": "Image"
+},
+{
+       "id": "image3",
+       "type": "image_picker",
+       "label": "Image"
+},
+{
+       "id": "image4",
+       "type": "image_picker",
+       "label": "Image"
+},
+{
+       "id": "image5",
+       "type": "image_picker",
+       "label": "Image"
+},
+{
+       "id": "image6",
+       "type": "image_picker",
+       "label": "Image"
+},
+{
+       "id": "image7",
+       "type": "image_picker",
+       "label": "Image"
+},
+{
+       "id": "image8",
+       "type": "image_picker",
+       "label": "Image"
+},
+{
+       "id": "image9",
+       "type": "image_picker",
+       "label": "Image"
+},
+{
+       "id": "image10",
+       "type": "image_picker",
+       "label": "Image"
+},
+{
+       "id": "image11",
+       "type": "image_picker",
+       "label": "Image"
+},
+{
+       "id": "image12",
+       "type": "image_picker",
+       "label": "Image"
+},
+{
+       "id": "image13",
+       "type": "image_picker",
+       "label": "Image"
+},
+{
+       "id": "image14",
+       "type": "image_picker",
+       "label": "Image"
+},
+{
+       "id": "image15",
+       "type": "image_picker",
+       "label": "Image"
+},
+{
+       "id": "image16",
+       "type": "image_picker",
+       "label": "Image"
+},
+{
+       "id": "image17",
+       "type": "image_picker",
+       "label": "Image"
+},
+{
+       "id": "image18",
+       "type": "image_picker",
+       "label": "Image"
+},
+{
+       "id": "image19",
+       "type": "image_picker",
+       "label": "Image"
+},
+{
+       "id": "image20",
+       "type": "image_picker",
+       "label": "Image"
+}
+      ]
+    }]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

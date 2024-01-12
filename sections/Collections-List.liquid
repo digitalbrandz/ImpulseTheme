@@ -1,0 +1,674 @@
+{% style %}
+{% assign loadedfonts = '' %}    
+{% assign familyandweight = section.settings.font.family | append: section.settings.font.weight %}
+{% if loadedfonts contains familyandweight %}
+{% else %}
+  {{ section.settings.font | font_face }}  
+{% endif %}   
+{% assign loadedfonts = loadedfonts | append: section.settings.font.family | append: section.settings.font.weight | append: section.settings.font.style | append: '|' %}
+
+
+
+
+
+#shopify-section-{{ section.id }} {
+overflow:hidden;
+margin-bottom:40px;  
+  
+background-size: cover;
+background-position: center;
+{% capture backgroundimage %}{{ section.settings.background_image | img_url: '1024x1024' }}{% endcapture %}                                   
+{% if backgroundimage contains 'no-image' %}
+{% if section.settings.background_color_2 contains 'transparent' or section.settings.background_color_2 contains 'rgba(0,0,0,0)' %}
+   {% if section.settings.background_color contains 'transparent' or section.settings.background_color contains 'rgba(0,0,0,0)' %}
+     {% else %}
+      background-color:{{ section.settings.background_color }};    
+     {% endif %}
+  {% else %}     
+    background: -moz-linear-gradient(left, {{ section.settings.background_color }} 0%, {{ section.settings.background_color_2 }} 100%);
+    background: -webkit-linear-gradient(left, {{ section.settings.background_color }} 0%, {{ section.settings.background_color_2 }} 100%);
+    background: linear-gradient(to right, {{ section.settings.background_color }} 0%, {{ section.settings.background_color_2 }} 100%);   
+  {% endif %}
+{% else %}
+background-image:url({{ section.settings.background_image | img_url: '1024x1024' }}); background-color:{{ section.settings.background_color }};
+{% endif %}    
+  
+{% unless section.settings.background_color contains 'transparent'  or section.settings.background_color contains 'rgba(0,0,0,0)' and section.settings.background_color_2 contains 'transparent' or section.settings.background_color_2 contains 'rgba(0,0,0,0)' and backgroundimage contains 'no-image' %}
+padding: 40px 0;  
+{% endunless %}
+}  
+
+#shopify-section-{{ section.id }} .collection-list .inner {
+   padding-bottom:{{  section.settings.aspectratio }}%; 
+}
+  
+{% unless section.settings.background_color contains '#ffffff'  or section.settings.background_color contains 'rgba(0,0,0,0)' and section.settings.background_color_2 contains '#ffffff' or section.settings.background_color_2 contains 'rgba(0,0,0,0)' and backgroundimage contains 'no-image' %}
+  @media (max-width: 1022px) { 
+  #shopify-section-{{ section.id }} {
+    padding:20px 15px;
+  }
+  #shopify-section-{{ section.id }} ul:not(.tworows) li:not(:last-child) {
+        margin-bottom: 30px;
+  }
+  }
+{% endunless %}  
+  
+  
+   
+{% assign familyandweight2 = section.settings.font_title.family | append: section.settings.font_title.weight %}
+{% if loadedfonts contains familyandweight2 %}
+{% else %}
+  {{ section.settings.font_title | font_face }}  
+{% endif %}   
+{% assign loadedfonts = loadedfonts | append: section.settings.font_title.family | append: section.settings.font_title.weight | append: section.settings.font_title.style | append: '|' %}
+  
+  
+ #shopify-section-{{ section.id }} .row.title h2 {
+    font-family: {{ section.settings.font_title.family }}, -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",Arial,sans-serif; 
+    font-weight:{{ section.settings.font_title.weight }}; 
+    font-style:{{ section.settings.font_title.style }};    
+      font-size:{{ section.settings.fontsize_title }}px;   
+    color:{{ section.settings.color_title }};
+   text-align:{{ section.settings.alignment_title }};
+   margin-bottom: 20px;
+ }  
+  
+  
+
+  
+#shopify-section-{{ section.id }} ul li a h3 {  
+    font-family: {{ section.settings.font.family }}, -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",Arial,sans-serif; 
+    font-weight:{{ section.settings.font.weight }}; 
+    font-style:{{ section.settings.font.style }}; 
+   {% unless section.settings.font_color contains 'transparent' or section.settings.font_color contains 'rgba(0,0,0,0)' %} color: {{ section.settings.font_color }}; {% endunless %}
+}
+
+
+{% assign familyandweight3 = section.settings.subtitle_font.family | append: section.settings.subtitle_font.weight %}
+{% if loadedfonts contains familyandweight3 %}
+{% else %}
+  {{ section.settings.subtitle_font | font_face }}  
+{% endif %}   
+{% assign loadedfonts = loadedfonts | append: section.settings.subtitle_font.family | append: section.settings.subtitle_font.weight | append: section.settings.subtitle_font.style | append: '|' %}
+  
+
+#shopify-section-{{ section.id }} ul li a h3 .last-word {  
+    font-family: {{ section.settings.subtitle_font.family }}, -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",Arial,sans-serif; 
+    font-weight:{{ section.settings.subtitle_font.weight }}; 
+    font-style:{{ section.settings.subtitle_font.style }}; 
+    font-size:{{ section.settings.subtitle_fontsize }}%;
+ {% unless section.settings.usesubtitlecolor == false %}   color: {{ section.settings.subtitle_color }}; {% endunless %}
+}
+
+  
+#shopify-section-{{ section.id }} ul li a {  
+    font-size:{{ section.settings.fontsize }}px; 
+}
+
+{% if section.settings.fullwidth %}
+  #shopify-section-{{ section.id }} .row {
+   max-width: 100%; 
+   }
+{% endif %}  
+  
+  
+
+ #shopify-section-{{ section.id }} ul li {
+	 list-style: none;
+}
+ #shopify-section-{{ section.id }} ul li.two {
+	 -ms-flex: 0 0 50%;
+	 flex: 0 0 50%;
+	 max-width: 50%;
+	 margin-bottom: 30px;
+}
+ @media (max-width: 1022px) {
+	 #shopify-section-{{ section.id }} ul li.two {
+		 -ms-flex: 0 0 100%;
+		 flex: 0 0 100%;
+		 max-width: 100%;
+		 padding-left: 0;
+		 padding-right: 0;
+	}
+}
+ #shopify-section-{{ section.id }} ul li.three {
+	 -ms-flex: 0 0 33.33333%;
+	 flex: 0 0 33.33333%;
+	 max-width: 33.33333%;
+}
+  {% if section.blocks.size == 3 %}  
+@media (max-width: 1022px) {
+	 #shopify-section-{{ section.id }} ul li.three {
+		 -ms-flex: 0 0 50%;
+		 flex: 0 0 100%;
+		 max-width: 100%;
+         padding:0;
+	}
+} 
+  {% else %}
+ @media (max-width: 1022px) {
+	 #shopify-section-{{ section.id }} ul li.three {
+		 -ms-flex: 0 0 50%;
+		 flex: 0 0 50%;
+		 max-width: 50%;
+         padding:0;
+	}
+}
+{% endif %}
+ #shopify-section-{{ section.id }} ul li a {
+	 position: relative;
+	 z-index: 1000;
+	 display: block;
+}
+ #shopify-section-{{ section.id }} ul li a img {
+	 width: 100%;
+}
+ #shopify-section-{{ section.id }} ul li a .info {
+	 top: 0px;
+	 width: 100%;
+	 padding: 10px 10px;
+	 text-align: center;
+	 height: 100%;
+	 background: none;
+	 display: flex;
+	 justify-content: center;
+	 align-items: center;
+}
+
+ @media (max-width: 1022px) {
+	 #shopify-section-{{ section.id }} ul li a .info h3 {
+		 font-size: 58%;
+	}
+}
+
+{% for block in section.blocks %}
+  {% case block.type %}
+    {% when 'Collection' %}
+
+     {% case block.settings.alignment %}
+        {% when 'under' %}
+  #shopify-section-{{ section.id }} .block-{{ block.id }} a {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+        {% endcase %}
+
+      #shopify-section-{{ section.id }} .block-{{ block.id }} .info {
+       {% case block.settings.alignment %}
+        {% when 'under' %}
+        {% else %}
+        position:absolute;
+        justify-content:{{ block.settings.alignment }}; 
+        {% endcase %}
+      }
+
+ @media (min-width: 1022px) {
+  #shopify-section-{{ section.id }} .block-{{ block.id }} .info h3 {
+        {% case block.settings.alignment %}
+        {% when 'flex-end' %}
+          padding-right:40px;
+        {% when 'flex-start' %}
+         padding-left:40px;
+        {% endcase %}
+   }
+}
+
+    {% endcase %}
+{% endfor %}  
+
+{% if section.settings.css != nil %}
+{{ section.settings.css | replace: '&gt;', '>' }}
+{% endif %}
+
+
+{% endstyle %}
+
+
+
+{% if section.settings.fullwidth %}
+{% assign image_size = '1024x1024' %}
+{% else %}
+{% assign image_size = 'grande' %}
+{% endif %}
+
+<div class="collection-list">
+{% if section.settings.title.size > 1 %}
+<div class="row title">
+  <div class="column">
+    <h2><span>{{ section.settings.title }}</span></h2>
+  </div>
+</div>
+{% endif %}
+
+<ul class="row align-middle align-center collections-widget {% unless section.blocks.size < 4 %}tworows{% endunless %}">
+     {% for block in section.blocks %}
+        {% case block.type %}
+            {% when 'Collection' %}
+             {% capture thecycle %}{% cycle 'odd', 'even' %}{% endcapture %}
+  <li  {% if thecycle == 'odd' %} data-aos="fade-right" {% else %} data-aos="fade-left"  {% endif %} data-aos-duration="600" class="collection-wrap columns {{ section.settings.collectionsPerRow }} block-{{ block.id }}">
+       <a href="{{ block.settings.url }}">  
+            <div class="info" data-title="{{ block.settings.title | escape }}">
+               {% style %}
+                #shopify-section-{{ section.id }} .block-{{ block.id }} h3 {
+                  {% unless block.settings.customcolors == false %}
+                  color:{{ block.settings.color }};
+                  background-color:{{ block.settings.background_color }};
+                  {% endunless %}
+                }
+               {% endstyle %}    
+               
+             {% if block.settings.title contains "-" %}  
+             {% assign titlearray = block.settings.title | split: ' ' %}
+               {% assign new_word = block.settings.title | split: '-' | first %}
+                {% assign new_word1 = block.settings.title | split: '-' | last %}
+               <h3>
+                 <span class="first-word">
+                   {{ new_word }}
+                 </span>
+                 <span class="last-word">
+                   {{ new_word1 }}
+                 </span>
+               </h3>
+               {% else %}
+               <h3>
+                 <span>{{ block.settings.title }}</span>
+               </h3>
+               {% endif %}
+               
+               
+			</div>
+	   <div class="inner">		
+          <img  class="lazyload" data-sizes="auto" data-src="{{ block.settings.image | img_url: image_size }}">    
+	  </div>
+       </a>
+  </li>
+  
+             {% endcase %}
+    {% endfor %}
+</ul>
+</div>
+{% schema %}
+
+  {
+    "name": "Collections List",
+    "settings": [
+{
+        "id": "title",
+        "type": "text",
+        "label": "Title (Optional)"
+},
+{
+    "type": "font_picker",
+     "id": "font_title",
+     "label": "Title Font",
+     "default": "work_sans_n6"
+},
+{
+    "type":   "range",
+    "id":     "fontsize_title",
+    "min":       30,
+    "max":       75,
+    "step":     1,
+    "unit":      "px",
+    "label":     "Title Font Size",
+    "default":   40
+},
+{
+   "type":      "radio",
+   "id":        "alignment_title",
+   "label":     "Title Alignment",
+   "options": [
+     { "value": "center", "label": "Center" },
+     { "value": "left", "label": "Left" },
+     { "value": "right", "label": "Right" }
+   ],
+   "default":   "center"
+},
+{
+       "id": "color_title",
+       "type": "color",
+       "label": "Title Color",
+       "default": "#000000"
+},
+{ "type":"header",
+"content": "Background Colors or Image"
+},
+{
+       "id": "background_image",
+       "type": "image_picker",
+       "label": "Background Image (Optional)"
+},
+{
+       "id": "background_color",
+       "type": "color",
+       "label": "Background Color",
+       "default": "#ffffff"
+},{
+       "id": "background_color_2",
+       "type": "color",
+       "label": "Background Color #2 (Optional Gradient)",
+       "default": "#ffffff"
+},
+{
+   "type":      "select",
+   "id":        "collectionsPerRow",
+   "label":     "Collections Per Row",
+   "options": [
+      { "value": "three", "label": "Three"},
+      { "value": "two", "label": "Two"}
+   ],
+   "default":   "three",
+   "info":      "Choose the number of collections per row"
+},
+{
+"type": "checkbox",
+"id": "fullwidth",
+"label": "Full Width",
+"default": false
+}, 
+{
+ "type": "header",
+ "content": "Collection Size"
+},
+  {
+    "type":   "range",
+    "id":     "aspectratio",
+    "min":       0,
+    "max":       200,
+    "step":     5,
+    "unit":      "%",
+    "label":     "Collection Box Aspect Ratio",
+    "default":   100
+     },
+{
+ "type": "header",
+ "content": "Collection Title"
+},
+ {
+     "type": "font_picker",
+     "id": "font",
+     "label": "Font",
+     "default": "open_sans_n4"
+   },
+  {
+    "type":   "range",
+    "id":     "fontsize",
+    "min":       12,
+    "max":       40,
+    "step":     1,
+    "unit":      "px",
+    "label":     "Font Size",
+    "default":   20
+     },
+{
+       "id": "font_color",
+       "type": "color",
+       "label": "Font Color",
+       "default": "#000000"
+},
+ {
+     "type": "font_picker",
+     "id": "subtitle_font",
+     "label": "Subtitle Font",
+     "default": "open_sans_n4"
+   },
+  {
+    "type":   "range",
+    "id":     "subtitle_fontsize",
+    "min":       50,
+    "max":       300,
+    "step":     10,
+    "unit":      "%",
+    "label":     "Subtitle Size (Relative % to Font Size)",
+    "default":   100
+     },
+{
+  "type": "checkbox",
+  "id": "usesubtitlecolor",
+  "label": "Use Subtitle Color",
+  "default": false
+},
+{
+       "id": "subtitle_color",
+       "type": "color",
+       "label": "Subtitle Color"
+},
+{
+ "type": "header",
+ "content": "Additional Custom CSS"
+},
+{
+        "id": "css",
+        "type": "html",
+        "label": "Custom CSS",
+	"info": "Use [Font 2 Web](http://www.font2web.com/) to convert fonts"
+}
+],
+"blocks": [
+    {
+     "type": "Collection",
+     "name": "Collection",
+     "settings" : [
+      {
+        "id": "title",
+        "type": "text",
+        "label": "Title"
+      },
+{
+   "type":      "radio",
+   "id":        "alignment",
+   "label":     "Alignment",
+   "options": [
+     { "value": "center", "label": "Center" },
+     { "value": "flex-start", "label": "Left" },
+     { "value": "flex-end", "label": "Right" },
+     { "value": "under", "label": "Under" }
+   ],
+   "default":   "center"
+},
+      {
+        "id": "image",
+        "type": "image_picker",
+        "label": "Preview Image"
+      },
+{
+   "id": "url",
+   "type": "url",
+   "label": "URL"
+},
+{
+  "type": "checkbox",
+  "id": "customcolors",
+  "label": "Use Colors",
+  "default": false
+},
+{
+"id": "background_color",
+"type": "color",
+"label": "Background Color"
+},
+{
+"id": "color",
+"type": "color",
+"label": "Color (Optional Override)",
+"default": "transparent"
+}
+      ]
+    }
+   ],
+  "presets": [
+    {
+      "name": "Collections List",
+      "category": "z Designer"
+    }
+  ]
+  }
+{% endschema %}
+
+{% stylesheet 'scss' %}
+// responsive sizes
+@mixin bp($point) {
+  
+  $bp-small: "(max-width: 350px)";
+  $bp-mobile: "(max-width: 600px)";
+  $bp-mobileup: "(min-width: 600px)";
+  $bp-phablet: "(max-width: 1022px)";
+  $bp-phabletup: "(min-width: 1022px)";
+  $bp-tablet: "(max-width: 1280px)";
+  $bp-tabletup: "(min-width: 1280px)";
+  $bp-laptop: "(max-width: 1600px)";
+  $bp-desktop: "(min-width: 1600px)";
+  @if $point == desktop {
+    @media #{$bp-desktop}  { @content; }
+  }  
+  @else if $point == laptop {
+    @media #{$bp-laptop} { @content; }
+  }
+  @else if $point == tablet {
+    @media #{$bp-tablet} { @content; }
+  }
+  @else if $point == tabletup {
+    @media #{$bp-tabletup} { @content; }
+  }
+  @else if $point == phablet {
+    @media #{$bp-phablet} { @content; }
+  }
+  @else if $point == phabletup {
+    @media #{$bp-phabletup} { @content; }
+  }
+  @else if $point == mobile {
+    @media #{$bp-mobile}  { @content; }
+  }
+  @else if $point == mobileup {
+    @media #{$bp-mobileup} { @content; }
+  }
+  @else if $point == small {
+    @media #{$bp-small}  { @content; }
+  }
+
+}
+
+//color transition
+@mixin transition($attribute, $duration) {
+    -webkit-transition: $attribute $duration ease;
+    -moz-transition: $attribute $duration ease;
+    transition: $attribute $duration ease;
+}
+
+
+.collection-list {
+.column, .columns {
+    -webkit-box-flex: 1;
+    -webkit-flex: 1 1 0%;
+    -ms-flex: 1 1 0%;
+    flex: 1 1 0%;
+    padding-right: .9375rem;
+    padding-left: .9375rem;
+    min-width: 0;
+}
+.align-middle {
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+.row {
+    max-width: 90.5rem;
+    margin-right: auto;
+    margin-left: auto;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -webkit-flex-flow: row wrap;
+    -ms-flex-flow: row wrap;
+    flex-flow: row wrap;
+}
+  ul {
+    margin: 0 auto;
+    padding: 0;
+    }
+    li {
+      list-style:none;
+      z-index:1;
+      &.two {
+        -ms-flex: 0 0 50%;
+        flex: 0 0 50%;
+        max-width: 50%;
+        margin-bottom: 30px;
+        @include bp(phablet) {
+         -ms-flex: 0 0 100%;
+	    flex: 0 0 100%;
+    	max-width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+        }
+      }
+      &.three {
+      -ms-flex: 0 0 33.33333%;
+    flex: 0 0 33.33333%;
+    max-width: 33.33333%;
+        @include bp(phablet) {
+        -ms-flex: 0 0 50%;
+	    flex: 0 0 50%;
+    	max-width: 50%;
+
+        }
+      }
+      a {
+    position: relative;
+    z-index: 1000;
+    display: block;  
+        img {
+        width:100%;
+        }
+        .info {
+    top: 0px;
+    width: 100%;
+    padding: 10px 10px;
+    text-align: center;
+    height: 100%;
+    background: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+          h3 {
+          padding: 10px 25px;
+          margin: 8% 0 0;   
+          margin: 0;
+          font-size:100%;
+          line-height: 1;
+			@include bp(phablet) {
+               padding: 10px 10px;
+  			  font-size: 58%;
+			}	
+            span {
+                 display: block;
+           }
+          }
+        }
+      }
+     .inner {
+    position: relative;
+    height: 0;
+    padding-bottom: 100%;
+    overflow: hidden;
+     }
+    }
+  &.tworows {
+    li {
+     @include bp(phabletup) {
+    	margin-bottom:20px;
+	}
+	}
+   } 
+  
+}
+
+{% endstylesheet %}
+
+{% javascript %}          
+{% endjavascript %}                                                        

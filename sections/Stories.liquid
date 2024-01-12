@@ -1,0 +1,633 @@
+{% style %}
+  .stories-wrap {
+  background-color:{{ section.settings.background_color }};
+  }  
+.story .gradient {
+  {% if section.settings.background_color_2 contains 'transparent' %}
+      background-color:{{ section.settings.bubble_background_color }};                            
+  {% else %}     
+    background: -moz-linear-gradient(top, {{ section.settings.bubble_background_color }} 0%, {{ section.settings.bubble_background_color_2 }} 100%);
+    background: -webkit-linear-gradient(top, {{ section.settings.bubble_background_color }} 0%, {{ section.settings.bubble_background_color_2 }} 100%);
+    background: linear-gradient(to bottom, {{ section.settings.bubble_background_color }} 0%, {{ section.settings.bubble_background_color_2 }} 100%);                            
+  {% endif %}
+
+}
+.story .title {
+  color:{{ section.settings.font_color }};
+}
+.story .gradient .tag {
+  border-color:{{ section.settings.background_color }} !important;
+    {% if section.settings.background_color_2 contains 'transparent' %}
+      background-color:{{ section.settings.bubble_tag_background_color }};                            
+  {% else %}     
+    background: -moz-linear-gradient(top, {{ section.settings.bubble_tag_background_color }} 0%, {{ section.settings.bubble_tag_background_color_2 }} 100%);
+    background: -webkit-linear-gradient(top, {{ section.settings.bubble_tag_background_color }} 0%, {{ section.settings.bubble_tag_background_color_2 }} 100%);
+    background: linear-gradient(to bottom, {{ section.settings.bubble_tag_background_color }} 0%, {{ section.settings.bubble_tag_background_color_2 }} 100%);                            
+  {% endif %}
+}  
+
+.story .img-wrap {
+background-color:{{ section.settings.background_color }};
+}
+
+   {% for block in section.blocks %}
+   #story-{{ block.id }} .img {
+   background-image:url({{ block.settings.image | img_url: 'small' }}); 
+   background-position:{% if block.settings.imageposition != '' %}{{ block.settings.imageposition }}{% else %}0{% endif %}% 0%
+   }
+   {% endfor %}
+{% endstyle %}
+<div   
+  data-section-id="{{ section.id }}"
+  data-section-type="stories-section"
+  data-init="StoriesSection_init_{{ section.id }}"
+  class="stories-wrap">
+  <div class="swiper-container">
+    <!-- Additional required wrapper -->
+    <div class="swiper-wrapper">
+   {% for block in section.blocks %}
+     {% case block.type %}
+      {% when 'Video' %}
+       <div class="swiper-slide">
+       <div class="story-wrap">
+       <a id="story-{{ block.id }}" class="story video" href="#" poster="{{ block.settings.image | img_url: '1024x1024' }}" media="{% if block.settings.mp41 %}{{ block.settings.mp41 }}{% if block.settings.mp41swipe %}::{{ block.settings.mp41swipe }}{% endif %}|{% endif %}{% if block.settings.mp42 %}{{ block.settings.mp42 }}{% if block.settings.mp42swipe %}::{{ block.settings.mp42swipe }}{% endif %}|{% endif %}{% if block.settings.mp43 %}{{ block.settings.mp43 }}{% if block.settings.mp43swipe %}::{{ block.settings.mp43swipe }}{% endif %}|{% endif %}{% if block.settings.mp44 %}{{ block.settings.mp44 }}{% if block.settings.mp44swipe %}::{{ block.settings.mp44swipe }}{% endif %}|{% endif %}{% if block.settings.mp45 %}{{ block.settings.mp45 }}{% if block.settings.mp45swipe %}::{{ block.settings.mp45swipe }}{% endif %}|{% endif %}{% if block.settings.mp46 %}{{ block.settings.mp46 }}{% if block.settings.mp46swipe %}::{{ block.settings.mp46swipe }}{% endif %}|{% endif %}{% if block.settings.mp47 %}{{ block.settings.mp47 }}{% if block.settings.mp47swipe %}::{{ block.settings.mp47swipe }}{% endif %}|{% endif %}{% if block.settings.mp48 %}{{ block.settings.mp48 }}{% if block.settings.mp48swipe %}::{{ block.settings.mp48swipe }}{% endif %}|{% endif %}{% if block.settings.mp49 %}{{ block.settings.mp49 }}{% if block.settings.mp49swipe %}::{{ block.settings.mp49swipe }}{% endif %}|{% endif %}{% if block.settings.mp410 %}{{ block.settings.mp410 }}{% if block.settings.mp410swipe %}::{{ block.settings.mp410swipe }}{% endif %}|{% endif %}">
+           <div class="gradient">
+            <div class="img-wrap">
+             <div class="img">
+             </div>
+            </div>
+              {% if block.settings.tag != '' %}<span class="tag">{{ block.settings.tag }}</span>{% endif %}
+         </div>
+         <div class="title">
+           {% if block.settings.title %}{{ block.settings.title }}{% else %}Story{% endif %}
+         </div>
+       </a>
+      
+       </div>
+      </div>
+       {% when 'Image' %}
+       <div class="swiper-slide">
+       <div class="story-wrap">
+          
+       <a id="story-{{ block.id }}" class="story image" href="#" poster="{{ block.settings.image | img_url: '1024x1024' }}" media="{% if block.settings.img1 %}{{ block.settings.img1 | img_url: '1024x1024' }}{% if block.settings.img1swipe %}::{{ block.settings.img1swipe }}{% endif %}|{% endif %}{% if block.settings.img2 %}{{ block.settings.img2 | img_url: '1024x1024' }}{% if block.settings.img2swipe %}::{{ block.settings.img2swipe }}{% endif %}|{% endif %}{% if block.settings.img3 %}{{ block.settings.img3 | img_url: '1024x1024' }}{% if block.settings.img3swipe %}::{{ block.settings.img3swipe }}{% endif %}|{% endif %}{% if block.settings.img4 %}{{ block.settings.img4 | img_url: '1024x1024' }}{% if block.settings.img4swipe %}::{{ block.settings.img4swipe }}{% endif %}|{% endif %}{% if block.settings.img5 %}{{ block.settings.img5 | img_url: '1024x1024' }}{% if block.settings.img5swipe %}::{{ block.settings.img5swipe }}{% endif %}|{% endif %}{% if block.settings.img6 %}{{ block.settings.img6 | img_url: '1024x1024' }}{% if block.settings.img6swipe %}::{{ block.settings.img6swipe }}{% endif %}|{% endif %}{% if block.settings.img7 %}{{ block.settings.img7 | img_url: '1024x1024' }}{% if block.settings.img7swipe %}::{{ block.settings.img7swipe }}{% endif %}|{% endif %}{% if block.settings.img8 %}{{ block.settings.img8 | img_url: '1024x1024' }}{% if block.settings.img8swipe %}::{{ block.settings.img8swipe }}{% endif %}|{% endif %}{% if block.settings.img9 %}{{ block.settings.img9 | img_url: '1024x1024' }}{% if block.settings.img9swipe %}::{{ block.settings.img9swipe }}{% endif %}|{% endif %}{% if block.settings.img10 %}{{ block.settings.img10 | img_url: '1024x1024' }}{% if block.settings.img10swipe %}::{{ block.settings.img10swipe }}{% endif %}|{% endif %}">
+         <div class="gradient">
+            <div class="img-wrap">
+             <div class="img">
+             </div>
+            </div>
+              {% if block.settings.tag != '' %}<span class="tag">{{ block.settings.tag }}</span>{% endif %}
+         </div>
+         <div class="title">
+           {% if block.settings.title %}{{ block.settings.title }}{% else %}Story{% endif %}
+         </div>
+       </a>
+      
+       </div>
+      </div>
+      {% when 'Link' %}
+       <div class="swiper-slide">
+       <div class="story-wrap">
+          
+       <a id="story-{{ block.id }}" class="story" href="{{ block.settings.url }}" poster="{{ block.settings.image | img_url: '1024x1024' }}">
+           <div class="gradient">
+            <div class="img-wrap">
+             <div class="img">
+             </div>
+            </div>
+             {% if block.settings.tag != '' %}<span class="tag">{{ block.settings.tag }}</span>{% endif %}
+         </div>
+         <div class="title">
+           {% if block.settings.title %}{{ block.settings.title }}{% else %}Story{% endif %}
+         </div>
+       </a>
+      
+       </div>
+      </div>
+     {% endcase %}
+  {% endfor %}  
+      
+  {% if section.settings.demo == true %}
+       <div class="swiper-slide">
+       <div class="story-wrap">
+          
+       <a class="story" href="https://youtu.be/bL_X_GK69P4?t=487" poster="{{ 'demo_stories_s-min.jpg' | asset_url }}">
+           <div class="gradient">
+            <div class="img-wrap">
+             <div class="img" style="background-image:url(//cdn.shopify.com/s/files/1/0949/4410/t/75/assets/demo_stories_s-min.jpg?43598);">
+             </div>
+            </div>
+             <span class="tag">How To</span>
+         </div>
+         <div class="title">
+           Setup Video
+         </div>
+       </a>
+      
+       </div>
+      </div>
+       <div class="swiper-slide">
+       <div class="story-wrap">
+          
+       <a class="story" href="https://youtu.be/bL_X_GK69P4?t=487" poster="{{ 'demo_stories_t-min.jpg' | asset_url }}">
+           <div class="gradient">
+            <div class="img-wrap">
+             <div class="img" style="background-image:url(//cdn.shopify.com/s/files/1/0949/4410/t/75/assets/demo_stories_t-min.jpg?43598);">
+             </div>
+            </div>
+         </div>
+         <div class="title">
+           Empty
+         </div>
+       </a>
+      
+       </div>
+      </div>
+       <div class="swiper-slide">
+       <div class="story-wrap">
+          
+       <a class="story" href="https://youtu.be/bL_X_GK69P4?t=487" poster="{{ 'demo_stories_a-min.jpg' | asset_url }}">
+           <div class="gradient">
+            <div class="img-wrap" >
+             <div class="img" style="background-image:url(//cdn.shopify.com/s/files/1/0949/4410/t/75/assets/demo_stories_a-min.jpg?43598);">
+             </div>
+            </div>
+         </div>
+         <div class="title">
+           Empty
+         </div>
+       </a>
+      
+       </div>
+      </div>
+       <div class="swiper-slide">
+       <div class="story-wrap">
+          
+       <a class="story" href="https://youtu.be/bL_X_GK69P4?t=487" poster="{{ 'demo_stories_r-min.jpg' | asset_url }}">
+           <div class="gradient">
+            <div class="img-wrap" > 
+             <div class="img" style="background-image:url(//cdn.shopify.com/s/files/1/0949/4410/t/75/assets/demo_stories_r-min.jpg?43598);">
+             </div>
+            </div>
+         </div>
+         <div class="title">
+           Empty
+         </div>
+       </a>
+      
+       </div>
+      </div>
+      <div class="swiper-slide">
+       <div class="story-wrap">
+          
+       <a class="story" href="https://youtu.be/bL_X_GK69P4?t=487" poster="{{ 'demo_stories_t-min.jpg' | asset_url }}">
+           <div class="gradient">
+            <div class="img-wrap" >
+             <div class="img" style="background-image:url(//cdn.shopify.com/s/files/1/0949/4410/t/75/assets/demo_stories_t-min.jpg?43598);">
+             </div>
+            </div>
+         </div>
+         <div class="title">
+           Empty
+         </div>
+       </a>
+      
+       </div>
+      </div>
+   {% endif %} 
+      
+      
+      
+      </div>
+</div>
+</div>
+{% schema %}
+  {
+    "name": "Stories",
+    "class": "stories-section",
+    "limit": 1,
+    "settings": [
+{
+   "type":      "paragraph",
+   "content":   "Watch How to Setup Here [Setup Instructions](https://youtu.be/bL_X_GK69P4?t=487)"
+},
+   {
+        "type": "checkbox",
+        "id": "hidestories",
+        "label": "Show Stories",
+        "default": true,
+        "info": "disable this if you want to hide stories functionality"
+      },
+{
+  "type": "checkbox",
+  "id": "demo",
+  "label": "Show Demo Stories",
+  "default": true,
+  "info": "disable this when you start adding your own stories"
+},
+{
+   "type":      "header",
+   "content":   "Stories Area Colors"
+},  
+{
+       "id": "background_color",
+       "type": "color",
+       "label": "Background Color",
+       "default": "#ffffff"
+      },
+      {
+       "id": "font_color",
+       "type": "color",
+       "label": "Font Color",
+       "default": "#000000"
+      },
+{
+   "type":      "header",
+   "content":   "Bubble Colors"
+},  
+{
+       "id": "bubble_background_color",
+       "type": "color",
+       "label": "Background Color",
+       "default": "#bf43a6"
+},{
+       "id": "bubble_background_color_2",
+       "type": "color",
+       "label": "Background Color #2 (Optional Gradient)",
+       "default": "#f5ae5f"
+},{
+   "type":      "header",
+   "content":   "Bubble Tag Colors"
+},  
+{
+       "id": "bubble_tag_background_color",
+       "type": "color",
+       "label": "Background Color",
+       "default": "#cf0168"
+},{
+       "id": "bubble_tag_background_color_2",
+       "type": "color",
+       "label": "Background Color #2 (Optional Gradient)",
+       "default": "#e0023f"
+}],
+"blocks": [
+  {
+"type": "Video",
+     "name": "Video",
+     "settings" : [
+{
+   "type":      "header",
+   "content":   "Bubble Design"
+},
+{
+       "id": "image",
+       "type": "image_picker",
+       "label": "Story Image"
+      },
+   {
+    "type":   "range",
+    "id":     "imageposition",
+    "min":       0,
+    "max":       100,
+    "step":     5,
+    "unit":      "%",
+    "label":     "Image Position",
+    "default":   0
+},
+      {
+       "id": "title",
+       "type": "text",
+       "label": "Title"
+      },
+      {
+       "id": "tag",
+       "type": "text",
+       "label": "Tag (Optional)"
+      },
+{
+   "type":      "header",
+   "content":   "Step 1. Convert Your Video File"
+},
+{
+   "type":      "paragraph",
+   "content":   "If your video is a .mov from an iphone you will need to convert it to MP4 [Convert To MP4](https://convertio.co/mp4-converter/)"
+},
+{
+   "type":      "header",
+   "content":   "Step 2. Optimize Video (Optional)"
+},
+{
+   "type":      "paragraph",
+   "content":   "This is optional but you can make your video load 10X faster for users if you upload it to this Free File Compressor [Optimize Video](https://www.youcompress.com/)"
+},
+{
+   "type":      "header",
+   "content":   "Step 3. Upload your Video"
+},
+{
+   "type":      "paragraph",
+   "content":   "Upload your video to your Shopify File Area [Watch How To Upload](https://youtu.be/bL_X_GK69P4?t=420)"
+},
+{
+   "type":      "header",
+   "content":   "Video Links"
+},
+      {
+       "id": "mp41",
+       "type": "text",
+       "label": "MP4 Link"
+      },
+      {
+       "id": "mp41swipe",
+       "type": "url",
+       "label": "Swipe Up Link (Optional)"
+      },
+      {
+       "id": "mp42",
+       "type": "text",
+       "label": "MP4 Link"
+      },
+      {
+       "id": "mp42swipe",
+       "type": "url",
+       "label": "Swipe Up Link (Optional)"
+      },
+      {
+       "id": "mp43",
+       "type": "text",
+       "label": "MP4 Link"
+      },
+      {
+       "id": "mp43swipe",
+       "type": "url",
+       "label": "Swipe Up Link (Optional)"
+      },
+      {
+       "id": "mp44",
+       "type": "text",
+       "label": "MP4 Link"
+      },
+      {
+       "id": "mp44swipe",
+       "type": "url",
+       "label": "Swipe Up Link (Optional)"
+      },
+      {
+       "id": "mp45",
+       "type": "text",
+       "label": "MP4 Link"
+      },
+      {
+       "id": "mp45swipe",
+       "type": "url",
+       "label": "Swipe Up Link (Optional)"
+      },
+      {
+       "id": "mp46",
+       "type": "text",
+       "label": "MP4 Link"
+      },
+      {
+       "id": "mp46swipe",
+       "type": "url",
+       "label": "Swipe Up Link (Optional)"
+      },
+      {
+       "id": "mp47",
+       "type": "text",
+       "label": "MP4 Link"
+      },
+      {
+       "id": "mp47swipe",
+       "type": "url",
+       "label": "Swipe Up Link (Optional)"
+      },
+      {
+       "id": "mp48",
+       "type": "text",
+       "label": "MP4 Link"
+      },
+      {
+       "id": "mp48swipe",
+       "type": "url",
+       "label": "Swipe Up Link (Optional)"
+      },
+      {
+       "id": "mp49",
+       "type": "text",
+       "label": "MP4 Link"
+      },
+      {
+       "id": "mp49swipe",
+       "type": "url",
+       "label": "Swipe Up Link (Optional)"
+      },
+      {
+       "id": "mp410",
+       "type": "text",
+       "label": "MP4 Link"
+      },
+      {
+       "id": "mp410swipe",
+       "type": "url",
+       "label": "Swipe Up Link (Optional)"
+      }
+]
+},
+  {
+"type": "Image",
+     "name": "Image",
+     "settings" : [
+{
+   "type":      "header",
+   "content":   "Bubble Design"
+},
+{
+       "id": "image",
+       "type": "image_picker",
+       "label": "Story Image"
+      },
+   {
+    "type":   "range",
+    "id":     "imageposition",
+    "min":       0,
+    "max":       100,
+    "step":     5,
+    "unit":      "%",
+    "label":     "Image Position",
+    "default":   0
+},
+      {
+       "id": "title",
+       "type": "text",
+       "label": "Title"
+      },
+      {
+       "id": "tag",
+       "type": "text",
+       "label": "Tag (Optional)"
+      },
+{
+   "type":      "header",
+   "content":   "Images"
+},
+      {
+       "id": "img1",
+       "type": "image_picker",
+       "label": "Image"
+      },
+      {
+       "id": "img1swipe",
+       "type": "url",
+       "label": "Swipe Up Link (Optional)"
+      },
+      {
+       "id": "img2",
+       "type": "image_picker",
+       "label": "Image (Optional)"
+      },
+      {
+       "id": "img2swipe",
+       "type": "url",
+       "label": "Swipe Up Link (Optional)"
+      },
+      {
+       "id": "img3",
+       "type": "image_picker",
+       "label": "Image (Optional)"
+      },
+      {
+       "id": "img3swipe",
+       "type": "url",
+       "label": "Swipe Up Link (Optional)"
+      },
+      {
+       "id": "img4",
+       "type": "image_picker",
+       "label": "Image (Optional)"
+      },
+      {
+       "id": "img4swipe",
+       "type": "url",
+       "label": "Swipe Up Link (Optional)"
+      },
+      {
+       "id": "img5",
+       "type": "image_picker",
+       "label": "Image (Optional)"
+      },
+      {
+       "id": "img5swipe",
+       "type": "url",
+       "label": "Swipe Up Link (Optional)"
+      },
+      {
+       "id": "img6",
+       "type": "image_picker",
+       "label": "Image (Optional)"
+      },
+      {
+       "id": "img6swipe",
+       "type": "url",
+       "label": "Swipe Up Link (Optional)"
+      },
+      {
+       "id": "img7",
+       "type": "image_picker",
+       "label": "Image (Optional)"
+      },
+      {
+       "id": "img7swipe",
+       "type": "url",
+       "label": "Swipe Up Link (Optional)"
+      },
+      {
+       "id": "img8",
+       "type": "image_picker",
+       "label": "Image (Optional)"
+      },
+      {
+       "id": "img8swipe",
+       "type": "url",
+       "label": "Swipe Up Link (Optional)"
+      },
+      {
+       "id": "img9",
+       "type": "image_picker",
+       "label": "Image (Optional)"
+      },
+      {
+       "id": "img9swipe",
+       "type": "url",
+       "label": "Swipe Up Link (Optional)"
+      },
+      {
+       "id": "img10",
+       "type": "image_picker",
+       "label": "Image (Optional)"
+      },
+      {
+       "id": "img10swipe",
+       "type": "url",
+       "label": "Swipe Up Link (Optional)"
+      }
+]
+},
+ {
+"type": "Link",
+     "name": "Link",
+     "settings" : [
+{
+   "type":      "header",
+   "content":   "Bubble Design"
+},
+{
+       "id": "image",
+       "type": "image_picker",
+       "label": "Story Image"
+      },
+   {
+    "type":   "range",
+    "id":     "imageposition",
+    "min":       0,
+    "max":       100,
+    "step":     5,
+    "unit":      "%",
+    "label":     "Image Position",
+    "default":   0
+},
+      {
+       "id": "title",
+       "type": "text",
+       "label": "Title"
+      },
+      {
+       "id": "tag",
+       "type": "text",
+       "label": "Tag (Optional)"
+      },
+{
+   "type":      "header",
+   "content":   "Link Info"
+},
+      {
+       "id": "url",
+       "type": "url",
+       "label": "Link to"
+      }
+]
+}
+ ],
+ "presets": [
+    {
+      "name": "Stories",
+      "category": "Digital Brandz"
+    }
+  ]
+  }
+{% endschema %}
+
+{% stylesheet 'scss' %}
+{% endstylesheet %}
+
+{% javascript %} 
+{% endjavascript %}                                      

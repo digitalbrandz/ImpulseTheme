@@ -1,0 +1,624 @@
+{% if section.settings.activate %}
+{% style %}
+html  {
+ overflow:hidden; 
+}
+html.loadedscroll {
+    overflow-y: auto
+}
+#shopify-section-Loader {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+      height: 100%;
+      height: 100vh;
+    z-index: 99999999;
+   pointer-events: none; 
+      -webkit-transition: opacity .3s linear;
+    transition: opacity .3s linear;
+
+  {% if section.settings.background_color_2 contains 'transparent' %}
+      background-color:{{ section.settings.background_color }};                            
+  {% else %}     
+    background: -moz-radial-gradient(center, {{ section.settings.background_color }} 0%, {{ section.settings.background_color_2 }} 100%);
+    background: -webkit-radial-gradient(center, {{ section.settings.background_color }} 0%, {{ section.settings.background_color_2 }} 100%);
+    background: radial-gradient(ellipse at center, {{ section.settings.background_color }} 0%, {{ section.settings.background_color_2 }} 100%);                            
+  {% endif %}   
+  
+  
+  
+    text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}  
+  
+#shopify-section-Loader > div {
+max-width:{{ section.settings.logo_width }}%;  
+}  
+  
+  
+@media only screen and (max-width: 44rem) { 
+#shopify-section-Loader > div {
+max-width:{{ section.settings.mobile_logo_width }}%;  
+}     
+}
+  
+
+@media only screen and (max-height: 52rem) {
+  #shopify-section-Loader { 
+      height: 100%;
+      height: 100vh;
+  }
+}
+  
+@media only screen and (max-width: 44rem) {
+  #shopify-section-Loader { 
+      height: 100%;
+      height: 100vh;
+  }
+}
+  
+  
+
+.swiper_Frame  {
+ overflow:hidden; 
+  
+}
+.swiper_Frame.loadedscroll {
+    overflow-y: auto
+}
+  
+
+.loaded #shopify-section-Loader {
+   opacity: 0
+}
+  
+.editloader #shopify-section-Loader {
+   opacity: 1;
+    transition-delay: 0s;
+    -webkit-transition-delay: 0s;    
+   pointer-events:auto;
+}  
+
+
+  
+html.loaded .swiper_Frame {
+    overflow-y: auto
+}  
+  
+.ui-mobile-rendering > * {
+visibility:visible;  
+}  
+  
+
+
+   
+{% case section.settings.animation %}
+{% when 'zoomIn' %} 
+#shopify-section-Loader div { 
+    animation: zoomIn 3s ease-out;
+  -webkit-animation: zoomIn 3s ease-out;
+      opacity: 1;
+}
+#shopify-section-Loader {
+    transition-delay: 2s;
+    -webkit-transition-delay: 2s;
+}
+ {% when 'fadeInUp' %}  
+#shopify-section-Loader div { 
+    animation: fadeInUp 1s;
+  -webkit-animation: fadeInUp 1s;
+    opacity:0;
+}
+#shopify-section-Loader {
+    transition-delay: 2s;
+    -webkit-transition-delay: 2s;
+}  
+ {% when 'lightSpeedIn' %}   
+#shopify-section-Loader div { 
+    animation: lightSpeedIn 1s ease-out;
+  -webkit-animation: lightSpeedIn 1s ease-out;
+  animation-delay: 1s;
+  -webkit-animation-delay: 1s;
+  opacity:0;
+}
+#shopify-section-Loader {
+    transition-delay: 3s;
+    -webkit-transition-delay: 3s;
+}    
+ {% when 'hinge' %}   
+#shopify-section-Loader div { 
+    animation: hinge 2s;
+  -webkit-animation: hinge 2s;
+  animation-delay: 1s;
+  -webkit-animation-delay: 1s;
+}
+#shopify-section-Loader {
+    transition-delay: 3s;
+    -webkit-transition-delay: 3s;
+}      
+ {% when 'rotateIn' %}   
+#shopify-section-Loader div { 
+    animation: rotateIn 1s;
+  -webkit-animation: rotateIn 1s;
+  animation-delay: 1s;
+  -webkit-animation-delay: 1s;
+    opacity:0;
+}
+#shopify-section-Loader {
+    transition-delay: 2s;
+    -webkit-transition-delay: 2s;
+}   
+{% when 'wobble' %}   
+#shopify-section-Loader div { 
+    animation: wobbleSkew 1s;
+  -webkit-animation: wobbleSkew 1s;
+  animation-delay: 0s;
+  -webkit-animation-delay: 0s;
+  -webkit-animation-timing-function: ease-in-out;
+  animation-timing-function: ease-in-out;  
+    opacity:1;
+}
+#shopify-section-Loader {
+    transition-delay: 2s;
+    -webkit-transition-delay: 2s;
+}    
+{% endcase %}  
+  
+   
+  
+  
+  
+
+#shopify-section-Loader div { 
+      top: -17%;
+  height: auto;
+      position: relative;
+    display: inline-block;
+    overflow: hidden;
+      -webkit-animation-fill-mode: forwards;  
+      animation-fill-mode: forwards;  
+     will-change: transform; 
+   -webkit-transform: translateZ(0);
+   -moz-transform: translateZ(0);
+   -ms-transform: translateZ(0);
+   -o-transform: translateZ(0);
+   transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+   -moz-backface-visibility: hidden;
+   -ms-backface-visibility: hidden;
+   backface-visibility: hidden; 
+   -webkit-perspective: 1000;
+   -moz-perspective: 1000;
+   -ms-perspective: 1000;
+   perspective: 1000; 
+  
+   
+}
+#shopify-section-Loader svg, #shopify-section-Loader img {
+  max-width: 100%; 
+  height: auto;
+}  
+
+  
+{% if section.settings.brand_logo_svg != '' and section.settings.trace %} 
+            {% assign fill = section.settings.brand_logo_svg | split: 'fill="' %}  
+            {% assign fill =  fill[1] | split: '"' %}  
+            {% assign fill =  fill[0] | strip  %}  
+#shopify-section-Loader svg.trace path {
+stroke:{{ fill }};
+stroke-width: 2px;
+fill-opacity: 0;
+stroke-opacity: 0;
+-webkit-transition: fill-opacity .3s linear, stroke-opacity .3s linear;
+transition: fill-opacity .3s linear, stroke-opacity .3s linear;
+}  
+
+#shopify-section-Loader svg.trace.start path {
+stroke-opacity: 1;
+}
+#shopify-section-Loader svg.trace.start.fill path {
+fill-opacity: 1; 
+stroke-opacity: 0; 
+}
+
+{% endif %}
+
+  
+  
+@keyframes zoomIn {
+    0%  {  transform: scale(1); }
+    100%  {  transform: scale(1.3) ;}
+}
+@-webkit-keyframes zoomIn {
+    0%  {  transform: scale(1);  }
+    100%  {  transform: scale(1.3);}
+}
+@keyframes fadeInUp {
+    from {
+        transform: translate3d(0,40px,0)
+    }
+
+    to {
+        transform: translate3d(0,0,0);
+        opacity: 1
+    }
+}
+
+@-webkit-keyframes fadeInUp {
+    from {
+        transform: translate3d(0,40px,0)
+    }
+
+    to {
+        transform: translate3d(0,0,0);
+        opacity: 1
+    }
+}  
+@keyframes lightSpeedIn {
+  from {
+    transform: translate3d(100%, 0, 0) skewX(-30deg);
+    opacity: 0;
+  }
+
+  60% {
+    transform: skewX(20deg);
+    opacity: 1;
+  }
+
+  80% {
+    transform: skewX(-5deg);
+    opacity: 1;
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}  
+@-webkit-keyframes lightSpeedIn {
+  from {
+    transform: translate3d(100%, 0, 0) skewX(-30deg);
+    opacity: 0;
+  }
+
+  60% {
+    transform: skewX(20deg);
+    opacity: 1;
+  }
+
+  80% {
+    transform: skewX(-5deg);
+    opacity: 1;
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}  
+@-webkit-keyframes lightSpeedIn {
+  from {
+    transform: translate3d(100%, 0, 0) skewX(-30deg);
+    opacity: 0;
+  }
+
+  60% {
+    transform: skewX(20deg);
+    opacity: 1;
+  }
+
+  80% {
+    transform: skewX(-5deg);
+    opacity: 1;
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}    
+@keyframes hinge {
+  0% {
+    transform-origin: top left;
+    animation-timing-function: ease-in-out;
+  }
+
+  20%,
+  60% {
+    transform: rotate3d(0, 0, 1, 80deg);
+    transform-origin: top left;
+    animation-timing-function: ease-in-out;
+  }
+
+  40%,
+  80% {
+    transform: rotate3d(0, 0, 1, 60deg);
+    transform-origin: top left;
+    animation-timing-function: ease-in-out;
+    opacity: 1;
+  }
+
+  to {
+    transform: translate3d(0, 700px, 0);
+    opacity: 0;
+  }
+}  
+@-webkit-keyframes hinge {
+  0% {
+    transform-origin: top left;
+    animation-timing-function: ease-in-out;
+  }
+
+  20%,
+  60% {
+    transform: rotate3d(0, 0, 1, 80deg);
+    transform-origin: top left;
+    animation-timing-function: ease-in-out;
+  }
+
+  40%,
+  80% {
+    transform: rotate3d(0, 0, 1, 60deg);
+    transform-origin: top left;
+    animation-timing-function: ease-in-out;
+    opacity: 1;
+  }
+
+  to {
+    transform: translate3d(0, 700px, 0);
+    opacity: 0;
+  }
+}
+@keyframes rotateIn {
+  from {
+    transform-origin: center;
+    transform: rotate3d(0, 0, 1, -200deg);
+    opacity: 0;
+  }
+
+  to {
+    transform-origin: center;
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}
+@-webkit-keyframes rotateIn {
+  from {
+    transform-origin: center;
+    transform: rotate3d(0, 0, 1, -200deg);
+    opacity: 0;
+  }
+
+  to {
+    transform-origin: center;
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}  
+/* Wobble Skew */
+@-webkit-keyframes wobbleSkew {
+  16.65% {
+    -webkit-transform: skew(-12deg);
+    transform: skew(-12deg);
+  }
+  33.3% {
+    -webkit-transform: skew(10deg);
+    transform: skew(10deg);
+  }
+  49.95% {
+    -webkit-transform: skew(-6deg);
+    transform: skew(-6deg);
+  }
+  66.6% {
+    -webkit-transform: skew(4deg);
+    transform: skew(4deg);
+  }
+  83.25% {
+    -webkit-transform: skew(-2deg);
+    transform: skew(-2deg);
+  }
+  100% {
+    -webkit-transform: skew(0);
+    transform: skew(0);
+  }
+}
+@keyframes wobbleSkew {
+  16.65% {
+    -webkit-transform: skew(-12deg);
+    transform: skew(-12deg);
+  }
+  33.3% {
+    -webkit-transform: skew(10deg);
+    transform: skew(10deg);
+  }
+  49.95% {
+    -webkit-transform: skew(-6deg);
+    transform: skew(-6deg);
+  }
+  66.6% {
+    -webkit-transform: skew(4deg);
+    transform: skew(4deg);
+  }
+  83.25% {
+    -webkit-transform: skew(-2deg);
+    transform: skew(-2deg);
+  }
+  100% {
+    -webkit-transform: skew(0);
+    transform: skew(0);
+  }
+}  
+
+.sk-three-bounce .sk-child{
+  background-color:{{ section.settings.spinner }}d1;
+}
+{% if section.settings.css != nil %}
+{{ section.settings.css }}
+{% endif %}   
+{% endstyle %}   
+<div
+  data-section-id="{{ section.id }}"
+  data-section-type="loader-section"
+  data-init="Loader_init_{{ section.id }}"     
+     
+     class="text-center">
+          {% if section.settings.brand_logo_svg != '' %}
+           {% if section.settings.trace %}
+            {% assign svg = section.settings.brand_logo_svg | split: '<svg' %}  
+            {% assign svg =  svg[1] | split: '>' %}  
+            {% assign svg =  svg[0] %}  
+            {% if svg contains 'class' %}
+              {% assign svg = svg | split: 'class="' %}  
+              {% assign svg = svg[1] | split: '"' %}  
+              {% assign svgclasses = svg[0] %}  
+              {% assign new_svgclasses = svgclasses | append: ' trace' %}  
+              {% assign finalsvg = section.settings.brand_logo_svg | replace: svgclasses, new_svgclasses %}   
+               {{ finalsvg }}
+            {% else %}
+             {% assign finalsvg = section.settings.brand_logo_svg | replace: '<svg', '<svg class="trace"' %}     
+             {{ finalsvg }}
+            {% endif %}
+          {% else %}
+            {{ section.settings.brand_logo_svg }}
+          {% endif %}
+  
+   
+          {% else %}
+           <img alt="{{ shop.name}} logo" src="{{ section.settings.brand_logo | img_url: 'medium' }}" />
+          {% endif %}
+</div>
+
+
+<script>
+  let loaded = sessionStorage.getItem('loaded');
+  if(loaded) {
+       var loader = document.querySelector('#shopify-section-Loader');
+       loader.style.display = 'none';
+       document.documentElement.classList.add('loaded');   
+       document.documentElement.classList.add('loadedscroll');
+  }
+  setTimeout(function() {
+  document.documentElement.classList.add('loaded');
+  setTimeout(function() {
+   document.documentElement.classList.add('loadedscroll');
+   sessionStorage.setItem('loaded', true); 
+  },500);
+      },1000);
+</script>
+
+
+{% endif %}
+{% schema %}
+  {
+    "name": "Loading Screen (Optional)",
+    "settings": [
+{
+  "type": "checkbox",
+  "id": "activate",
+  "label": "Show Loading Screen",
+  "default": false
+},
+{
+       "id": "brand_logo",
+       "type": "image_picker",
+       "label": "Brand Logo"
+      },
+      {
+       "id": "brand_logo_svg",
+       "type": "html",
+       "label": "Brand Logo SVG (Optional)"
+      },
+{
+    "type":   "range",
+    "id":     "logo_width",
+    "min":       5,
+    "max":       60,
+    "step":     1,
+    "unit":      "%",
+    "label":     "Logo Width",
+    "default":   47
+},
+{
+    "type":   "range",
+    "id":     "mobile_logo_width",
+    "min":       25,
+    "max":       90,
+    "step":     1,
+    "unit":      "%",
+    "label":     "Logo Width (Mobile)",
+    "default":   60
+},
+{
+   "type":      "header",
+   "content":   "Animation"
+},
+{
+   "type":      "select",
+   "id":        "animation",
+   "label":     "Logo Animation",
+    "options": [
+      { "value": "zoomIn", "label": "Zoom In"},
+      { "value": "fadeInUp", "label": "Fade In and Up"},
+      { "value": "rotateIn", "label": "Rotate In"},
+      { "value": "lightSpeedIn", "label": "Light Speed In"},
+      { "value": "hinge", "label": "hinge"},
+      { "value": "wobble", "label": "Wobble"}
+   ],
+   "default":   "zoomIn"
+},
+{
+        "id": "trace",
+        "label": "Trace In Logo (SVG Only)",
+        "default": false,
+        "type": "checkbox"
+},
+{
+   "type":      "header",
+   "content":   "Background Colors"
+},{
+       "id": "background_color",
+       "type": "color",
+       "label": "Background Color",
+       "default": "#ffffff"
+},{
+       "id": "background_color_2",
+       "type": "color",
+       "label": "Background Color #2 (Optional Gradient)",
+       "default": "#D9DBEB"
+},
+{
+ "type": "header",
+ "content": "Additional Custom CSS"
+},
+{
+        "id": "css",
+        "type": "html",
+        "label": "Custom CSS"
+}]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+
+var section = document.querySelector('#shopify-section-Loader');
+document.addEventListener('shopify:section:select', function(e) {
+ if(e.target == section) {
+ document.body.classList.add('editing', 'editloader');
+     document.addEventListener("shopify:section:deselect" ,function(e){
+       if(e.target == section) {
+         document.body.classList.remove('editloader');
+       }
+     });   
+  }
+})
+
+
+{% endjavascript %}            

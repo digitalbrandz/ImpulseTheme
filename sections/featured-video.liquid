@@ -1,0 +1,221 @@
+{% style %}
+
+   {% if section.settings.background != blank %}
+     #shopify-section-{{ section.id }} {
+     background-size: cover;
+     background-position: center;
+      background-image:url({{ section.settings.background | img_url: '1024x1024' }});
+     }
+   {% endif %}
+
+
+
+{% if section.settings.css != nil %}
+{% assign css = section.settings.css | replace: '&gt;','>' %}
+{{ css }}
+{% endif %}
+{% endstyle %}
+
+{% if section.settings.divider %}<div class="section--divider">{% endif %}
+
+<div class="page-width">
+  
+  <!-- Title -->
+  
+  {% if section.settings.title != blank %}
+    <div class="section-header">
+      <h2>{{ section.settings.title }}</h2>
+    </div>
+  {% endif %}
+  
+  <!-- END Title -->
+  
+  
+  
+<div class=" {% if section.settings.video_url == blank and section.settings.mp4 == blank and section.settings.image == blank %} video-wrapper{% else %}  main{% endif %}">
+  
+    
+  
+{% if section.settings.video_url == blank and section.settings.mp4 == blank %}
+        <iframe src="//www.youtube.com/embed/_9VUPq3SxOc?rel=0&showinfo=0&vq=720" width="850" height="480" frameborder="0" allowfullscreen></iframe>
+{% endif %}
+  
+  
+{% if section.settings.mp4 != blank and section.settings.video_url != blank %}  
+<a data-fancybox href="{{ section.settings.video_url }}">
+<svg width="191pt" height="237pt" viewBox="0 0 191 237" version="1.1" xmlns="http://www.w3.org/2000/svg">
+<g id="#ffffffff">
+<path fill="#ffffff" opacity="1.00" d=" M 0.00 17.29 C 3.39 11.70 5.92 5.56 9.93 0.37 C 14.29 1.91 18.13 4.53 22.18 6.70 C 73.89 35.35 125.62 63.98 177.35 92.60 C 184.64 96.80 190.00 104.52 190.60 113.01 C 191.28 119.32 189.82 125.85 186.18 131.09 C 182.75 136.45 176.84 139.25 171.85 142.87 C 129.49 171.52 87.05 200.07 44.72 228.78 C 40.61 231.52 36.57 234.67 31.68 235.89 C 25.12 237.48 17.79 236.74 12.07 232.97 C 6.12 229.52 2.33 223.60 0.00 217.28 L 0.00 74.20 C 7.19 74.04 14.42 73.65 21.60 74.28 C 21.82 119.19 21.65 164.12 21.67 209.04 C 21.72 211.20 21.97 213.38 22.71 215.42 C 25.48 216.49 27.96 214.54 30.14 213.11 C 74.05 183.32 118.06 153.68 162.02 123.97 C 164.73 122.12 167.75 119.61 167.58 115.99 C 167.43 111.91 163.65 109.45 160.45 107.65 C 106.98 78.02 53.55 48.31 0.00 18.82 L 0.00 17.29 Z" />
+</g>
+</svg>
+</a>    
+{% endif %}
+  
+  
+{% if section.settings.mp4 != blank and section.settings.video_url == blank %}    
+<div class="mute">
+<span>Tap for sound 
+<svg width="671pt" height="670pt" viewBox="0 0 671 670" version="1.1" xmlns="http://www.w3.org/2000/svg">
+<g id="#000000fe">
+<path fill="#000000" opacity="1.00" d=" M 1.87 22.06 C 5.18 9.81 17.11 -0.03 30.02 0.50 C 38.09 0.35 46.24 3.35 52.00 9.06 C 106.96 64.00 161.90 118.97 216.87 173.91 C 268.31 123.34 319.81 72.84 371.24 22.27 C 377.92 15.39 385.43 8.84 394.71 5.80 C 404.04 2.46 415.34 3.36 423.00 10.04 C 431.85 17.56 434.76 29.78 434.63 40.95 C 434.66 143.97 434.64 246.99 434.65 350.01 C 434.83 363.93 434.28 377.93 434.91 391.82 C 453.46 410.69 472.32 429.27 490.99 448.04 C 546.84 503.86 602.63 559.73 658.51 615.51 C 664.11 620.22 668.37 626.60 669.82 633.84 C 671.78 639.84 670.06 646.18 667.85 651.84 C 663.70 661.62 654.11 668.47 643.69 670.00 L 637.41 670.00 C 632.61 669.36 627.86 667.93 623.80 665.25 C 619.08 662.38 615.85 657.78 611.85 654.07 C 411.02 453.26 210.20 252.42 9.37 51.60 C 1.77 44.07 -1.16 32.31 1.87 22.06 Z"></path>
+<path fill="#000000" opacity="1.00" d=" M 42.35 235.16 C 46.23 223.52 57.72 214.88 70.02 214.65 C 80.75 214.58 91.48 214.66 102.21 214.62 C 212.12 324.43 321.92 434.35 431.82 544.17 C 432.79 545.39 434.68 546.30 434.65 548.06 C 434.63 573.71 434.68 599.36 434.62 625.01 C 434.54 636.23 432.37 648.10 425.24 657.12 C 420.27 663.59 412.12 667.53 403.93 666.97 C 393.17 666.35 383.68 660.18 375.99 653.03 C 308.98 587.73 242.12 522.27 175.08 457.00 C 140.74 457.01 106.39 456.98 72.04 457.02 C 55.59 457.99 40.46 443.42 40.72 426.97 C 40.69 369.32 40.71 311.68 40.71 254.04 C 40.81 247.73 40.10 241.20 42.35 235.16 Z"></path>
+</g>
+</svg>
+</span>
+</div>  
+{% endif %}
+  
+  
+{% if section.settings.mp4 != blank %}  
+<div data-aos="fade-up" data-aos-duration="700"
+    data-aos-easing="ease-out-cubic">
+         <video playsinline="" autoplay="" preload="auto" loop="loop" muted="muted" onclick="event.preventDefault(); event.currentTarget.muted = false; event.currentTarget.parentElement.previousElementSibling.style.opacity = 0;">
+            <source src="{{ section.settings.mp4 }}" type="video/mp4">
+         </video>
+</div>  
+{% endif %}  
+  
+  
+{% if section.settings.mp4 == blank and section.settings.image != blank %}
+<a data-fancybox href="{{ section.settings.video_url }}">
+<svg width="191pt" height="237pt" viewBox="0 0 191 237" version="1.1" xmlns="http://www.w3.org/2000/svg">
+<g id="#ffffffff">
+<path fill="#ffffff" opacity="1.00" d=" M 0.00 17.29 C 3.39 11.70 5.92 5.56 9.93 0.37 C 14.29 1.91 18.13 4.53 22.18 6.70 C 73.89 35.35 125.62 63.98 177.35 92.60 C 184.64 96.80 190.00 104.52 190.60 113.01 C 191.28 119.32 189.82 125.85 186.18 131.09 C 182.75 136.45 176.84 139.25 171.85 142.87 C 129.49 171.52 87.05 200.07 44.72 228.78 C 40.61 231.52 36.57 234.67 31.68 235.89 C 25.12 237.48 17.79 236.74 12.07 232.97 C 6.12 229.52 2.33 223.60 0.00 217.28 L 0.00 74.20 C 7.19 74.04 14.42 73.65 21.60 74.28 C 21.82 119.19 21.65 164.12 21.67 209.04 C 21.72 211.20 21.97 213.38 22.71 215.42 C 25.48 216.49 27.96 214.54 30.14 213.11 C 74.05 183.32 118.06 153.68 162.02 123.97 C 164.73 122.12 167.75 119.61 167.58 115.99 C 167.43 111.91 163.65 109.45 160.45 107.65 C 106.98 78.02 53.55 48.31 0.00 18.82 L 0.00 17.29 Z" />
+</g>
+</svg>
+</a>   
+<div data-aos="fade-up" data-aos-duration="700"
+    data-aos-easing="ease-out-cubic">
+        <div class="image-wrap" style="height: 0; padding-bottom: {{ 100 | divided_by: section.settings.image.aspect_ratio }}%;">
+            {%- assign img_url = section.settings.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+            <img class="feature-row__image lazyload"
+                data-src="{{ img_url }}"
+                data-widths="[180, 360, 540, 720, 900, 1080]"
+                data-aspectratio="{{ section.settings.image.aspect_ratio }}"
+                data-sizes="auto"
+                alt="{{ section.settings.image.alt }}">
+          </div>
+</div>  
+{% endif %}  
+  
+  
+  
+{% if section.settings.mp4 == blank and section.settings.image == blank and section.settings.video_url.type == "youtube" %}  
+<iframe src="//www.youtube.com/embed/{{ section.settings.video_url.id }}?rel=0&showinfo=0&vq=720" width="850" height="480" frameborder="0" allowfullscreen></iframe>
+{% endif %}    
+  
+{% if section.settings.mp4 == blank and section.settings.image == blank and section.settings.video_url.type == "vimeo" %}
+<iframe src="//player.vimeo.com/video/{{ section.settings.video_url.id }}?color={{ settings.color_button | remove: "#" }}&byline=0&portrait=0&badge=0" width="850" height="480" frameborder="0" allowfullscreen></iframe>
+{% endif %}  
+  
+  
+{% if section.settings.link != blank %}
+  <div class="button-wrap" data-aos="fade-up" data-aos-duration="700"
+    data-aos-easing="ease-out-cubic">
+      <a class="btn" href="{{ section.settings.link }}" >{{ section.settings.label }}</a>
+ </div>  
+{% endif %}  
+  
+</div>  
+</div>  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+{% if section.settings.divider %}</div>{% endif %}
+
+
+{% schema %}
+  {
+    "name": "Video",
+    "class": "index-section media-with-content featured-video",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading"
+      },
+  {
+        "type": "checkbox",
+        "id": "divider",
+        "label": "Show section divider",
+        "default": false
+      },
+      {
+        "type": "video_url",
+        "id": "video_url",
+        "label": "Video link",
+        "accept": ["youtube", "vimeo"]
+      },
+{
+       "id": "mp4",
+       "type": "url",
+       "label": "mp4 Poster"
+},
+{
+       "id": "image",
+       "type": "image_picker",
+       "label": "Image Poster"
+},
+{
+ "type": "header",
+ "content": "Button Settings"
+},
+{
+       "id": "link",
+       "type": "url",
+       "label": "Link"
+},
+{
+       "id": "label",
+       "type": "text",
+       "label": "Label",
+       "default": "Click Here"
+},
+{
+       "id": "button_color",
+       "type": "color",
+       "label": "Color",
+       "default": "#ffffff"
+},
+{
+       "id": "button_background",
+       "type": "color",
+       "label": "Background Color",
+       "default": "#000000"
+},
+{
+ "type": "header",
+ "content": "Background Settings"
+},
+{
+       "id": "background",
+       "type": "image_picker",
+       "label": "Background Image"
+},
+{
+ "type": "header",
+ "content": "Additional Custom CSS"
+},
+{
+        "id": "css",
+        "type": "html",
+        "label": "Custom CSS"
+}
+    ],
+    "presets": [
+      {
+        "name": "Video",
+        "category": "Video"
+      }
+    ]
+  }
+{% endschema %}

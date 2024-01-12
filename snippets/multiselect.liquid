@@ -1,0 +1,679 @@
+{{ 'multi-7.js' | asset_url | script_tag }}
+{{ 'multi-1.js' | asset_url | script_tag }}
+{{ 'multiselect.scss.css' | asset_url | stylesheet_tag }}
+{% if product.variants.size >= 1 %}
+<div id="Multiselect_{{ product.id }}" class="multiselect_wrap">
+   {% for option in product.options %}
+   {% if forloop.index0 == 0 %}
+   <script>
+      var multiselectwrap = document.querySelector('#Multiselect_{{ product.id }}');
+      var form = multiselectwrap.closest('form');
+      
+       var siblings = n => [...n.parentElement.children].filter(c=> c!=n && c.classList.contains('option-wrap'))
+       var siblings2 = n => [...n.parentElement.children].filter(c=> c!=n && c.classList.contains('multi-swatch-element'))
+       
+      setTimeout(function() {
+      // add selected to total...and zero it out
+     var pricewrapEl = form.parentElement.querySelector('#ProductPrice-{{ product.id }}');
+      pricewrapEl.innerHTML = '';                                                  
+      var priceEl = document.createElement("SPAN");
+      priceEl.classList.add('product-price');                     
+      var priceSymbol = priceEl.textContent.charAt(0);
+      priceEl.innerHTML = priceSymbol + '0.00'; 
+      var totalSelect = document.createElement("SPAN");
+      totalSelect.classList.add('total-select');
+      totalSelect.innerHTML = 'Selected Total '; 
+      pricewrapEl.prepend(totalSelect);
+      pricewrapEl.append(priceEl); 
+      var comparePrice = pricewrapEl.querySelector('.product-compare-price');
+       if(comparePrice) {
+         comparePrice.innerHTML = '';
+       }      
+     },4);
+      
+   </script>
+   {% endif %}
+   {% assign found_option = false %}
+   {% assign is_color = false %}
+   {% assign option_index = 0 %}
+   {% assign lastoption = product.options.size | minus: 1 %}
+   {% if option %}
+   {% assign found_option = true %}
+   {% assign option_index = forloop.index0 %}  
+
+   {% assign downcased_option = option | downcase %}
+   {% if downcased_option contains 'color' or downcased_option contains 'colour' %}
+   {% assign is_color = true %}
+   {% endif %}
+   {% endif %}
+   {% if option_index == 0 %}
+   <div class="multi-swatch clearfix {% if option_index == lastoption %}last_swatch{% endif %}" data-option-index="{{ option_index }}">
+     <div class="option-wrap first">
+       <div class="header">{{ option }} {% if option_index == lastoption %}<span>Choose as many as you like</span>{% endif %}</div>
+      {% assign values = '' %}
+      {% assign value = variant.options[option_index] %}
+      {% for variant in product.variants %}
+      {% assign value = variant.option1 %}
+      {% unless values contains value %}
+      {% assign values = values | join: ',' %}
+      {% assign values = values | append: ',' | append: value %} 
+      {% assign values = values | split: ',' %} 
+       
+      <div id="{{ product.handle }}-{{ value | remove: ' ' }}" data-value="{{ value | handle }}" class="multi-swatch-element {% if is_color %}color image {% endif %} value-{{ value | handle }} {% if variant.available %}available{% else %} {% if option_index == lastoption %}soldout{% endif %} {% endif %} {% if forloop.first %}{% unless option_index == lastoption %}active{% endunless %}{% endif %} ">
+         <!-- if product options only 1 lets give em all the options...if more lets make another wrapper -->
+         {% if variant.inventory_management != blank %}
+         {% if variant.inventory_policy == 'continue' %}
+         {% assign stock = 999 %}
+         {% else %}
+         {% assign stock = variant.inventory_quantity %}
+         {% endif %}
+         {% else %}
+         {% assign stock = 999 %}
+         {% endif %}   
+         {% if option_index == lastoption %} 
+         <input id="multi-swatch-{{ option_index }}-{{ value | handle }}" data-value="{{ value | handle }}" type="checkbox" name="id" value="{{ variant.id }}" inventory="{{ stock }}" quantity="1" variant-price="{{ variant.price }}"  {% unless variant.available %}disabled{% endunless %}>
+
+         <div class="quantity">
+            <span>0</span>
+         </div>
+         <label for="multi-swatch-{{ option_index }}-{{ value | handle }}"><span class="multiselect-title">{{ variant.title }}</span> <span class="multiselect_price">{{ variant.price | money }}</span></label>
+
+ 
+         
+         {% else %}
+         <input id="multi-swatch-{{ option_index }}-{{ value | handle }}" data-value="{{ value | handle }}" type="radio" name="id-{{ option_index }}" value="{{ variant.id }}" inventory="{{ stock }}" quantity="1" {% if forloop.first %} checked{% endif %} {% unless variant.available %}{% if option_index == lastoption %}disabled{% endif %}{% endunless %}>
+         <label class="{% if is_color  %}color{% endif %}" for="multi-swatch-{{ option_index }}-{{ value | handle }}">
+           {% if is_color  %} 
+           <span class="image" style="background-color:{{ variant.option1 | handle }};">
+             <span>
+              {% if block.settings.color-image %}<img src="{{ value | handle | append: '.jpg' |  file_img_url: 'medium' }}" />{% endif %}
+             </span>
+           </span>
+           {% endif %}
+           <span class="multiselect-title">{{ variant.option1 }}</span>
+        </label>
+
+         
+         {% endif %}
+      </div>
+       
+      {% if variant.available and option_index != lastoption %}
+      <script>
+         var el = form.querySelector('.multi-swatch[data-option-index="{{ option_index }}"] .value-{{ value | handle }}');
+         var input = el.querySelector('input');                                   
+         //remove soldout add available 
+         el.classList.remove("soldout");
+         input.removeAttribute('disabled');
+      </script>
+      {% endif %}
+       
+      {% endunless %}
+      {% endfor %} 
+      {% if option_index == lastoption %}
+      <div class="Multiselect-clear">
+         <a href="#">Clear</a>
+      </div>
+      {% endif %} 
+ 
+      <script> 
+         quantitycheckboxes  = form.querySelectorAll('.multi-swatch[data-option-index="0"] input');
+         if (quantitycheckboxes) {
+         quantitycheckboxes.forEach(function(quantitycheckbox) { 
+         
+              quantitycheckbox.addEventListener( 'click', function(e) { 
+                                    var swatchelement = this.parentElement;
+                
+                                  // one time animation before active
+                if(!swatchelement.classList.contains('active')) {
+                 swatchelement.classList.add('popgrow'); 
+                 "webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend".split(" ").map(name => swatchelement.removeEventListener(name, popgrow, false));                    
+                 "webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend".split(" ").map(name => swatchelement.addEventListener(name, popgrow, false)); 
+                  function popgrow(e) {
+                    // remove class
+                    swatchelement.classList.remove('popgrow');
+                   // make it one time
+                   "webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend".split(" ").map(name => swatchelement.removeEventListener(name, popgrow, false));  
+                  }
+                }
+                
+                     if(this.checked == true) {
+                     swatchelement.classList.add('active');
+                       if(this.type == "radio") {
+                         var sibs = siblings2(swatchelement);
+                         sibs.forEach(element => element.classList.remove('active')); 
+                       }
+                     }
+                if(this.type == "checkbox") {
+            
+                     var quantitywrap = this.nextElementSibling;
+                     var quantityspan = quantitywrap.getElementsByTagName('span')[0];
+                     var currentquantity = Number(quantityspan.innerHTML);
+                     var inventory =  Number(this.getAttribute('inventory'));
+                 
+                     // add quantity     
+                  if(currentquantity < inventory) {
+                     quantityspan.innerHTML = ++currentquantity;
+                    this.setAttribute('quantity', quantityspan.innerHTML);
+                    // add to total price
+                    var mspriceEl = quantitywrap.nextElementSibling.querySelector('.multiselect_price');
+                    var msprice = parseFloat(mspriceEl.textContent.substring(1));
+                    
+                    var priceSymbol = mspriceEl.textContent.charAt(0);
+                    
+                    var totalSelectEl = form.parentElement.querySelector('.product-price');
+                    var totalSelect = parseFloat(totalSelectEl.textContent.substring(1));
+                    var newTotal = (Number(msprice) + Number(totalSelect)).toFixed(2);
+                    totalSelectEl.innerHTML = priceSymbol + newTotal;
+         
+                  }
+               if(currentquantity > 1) {
+                 quantitywrap.classList.add('pop'); 
+                 "webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend".split(" ").map(name => quantitywrap.removeEventListener(name, pop, false));                    
+                 "webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend".split(" ").map(name => quantitywrap.addEventListener(name, pop, false)); 
+                  function pop(e) {
+                    // remove class
+                    quantitywrap.classList.remove('pop');
+                   // make it one time
+                   "webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend".split(" ").map(name => quantitywrap.removeEventListener(name, pop, false));  
+                  }
+                }
+           
+                // add to total
+           
+                  
+               
+                if(this.checked === false ) {
+                 this.checked = true; 
+                 e.preventDefault(); 
+                }
+           
+                }
+              });
+              
+         });  
+         }
+         // add clear function
+         {% if option_index == lastoption %} 
+         var clear = form.querySelector('.multi-swatch[data-option-index="0"] .Multiselect-clear');
+         clear.addEventListener( 'click', function(e) {
+          quantitycheckboxes.forEach(function(quantitycheckbox) { 
+             quantitycheckbox.checked = false;
+             quantitycheckbox.setAttribute('quantity', 1);
+             quantitycheckbox.nextElementSibling.getElementsByTagName('span')[0].innerHTML = 0;
+             quantitycheckbox.parentElement.classList.remove('active');
+          }); 
+          // clear current total
+         var totalSelectEl = form.parentElement.querySelector('.product-price');
+          var totalSymbol = totalSelectEl.textContent.charAt(0);
+          totalSelectEl.innerHTML = totalSymbol + '0.00';  
+         });
+         {% endif %}   
+      </script>
+    
+   </div>
+  </div>
+   {% endif %}
+   {% if product.options.size > 1 %} 
+   {% if option_index == 1 %}
+   <div class="multi-swatch clearfix {% if option_index == lastoption %}last_swatch{% endif %}" data-option-index="{{ option_index }}">
+      {% assign values = '' %}
+      {% assign value = variant.options[option_index] %}
+      {% for variant in product.variants %}
+      {% assign value = variant.options[0] %}
+      {% unless values contains value %}   
+      <div id="option-{{ product.handle }}-{{ product.id }}-{{ value | handle }}" class="option-wrap {% if product.selected_or_first_available_variant.option1 == value and option_index == lastoption %}first {% endif %}"  {% unless product.selected_or_first_available_variant.option1 == value %}style="display:none;"{% endunless %}> 
+      <div class="header">{{ option }} {% unless option_index == lastoption %} / {{ value | title }} {% endunless %}{% if option_index == lastoption %}<span>Choose as many as you like</span>{% endif %}</div>
+      <div class="option-wrap">
+         {% assign optionloop = 0 %} 
+         <!-- loop out all the options for this div PERIOD! -->
+         {% assign values1 = '' %}
+         {% for variant1 in product.variants %}
+         {% assign value1 = variant1.option2 %}
+         {% unless values1 contains value1 %}      
+         {% if variant1.option1 == value %}  
+         {% if variant1.inventory_management != blank %}
+         {% if variant1.inventory_policy == 'continue' %}
+         {% assign stock = 999 %}
+         {% else %}
+         {% assign stock = variant1.inventory_quantity %}
+         {% endif %}
+         {% else %}
+         {% assign stock = 999 %}
+         {% endif %}    
+         <div id="element-{{ product.handle }}-{{ value | handle }}-{{ value1 | handle }}" data-value="{{ value | handle }}-{{ value1 | handle }}" class="multi-swatch-element {% if is_color %}color image{% endif %} value-{{ value | handle }}-{{ value1 | handle }} {% if variant1.available %}available{% else %}{% if option_index == lastoption %}soldout{% endif %}{% endif %} {% if optionloop == 0 %}{% unless option_index == lastoption %}active{% endunless %}{% endif %}">
+            {% if option_index == lastoption %} 
+            <input id="multi-swatch-{{ product.handle }}-{{ value | handle }}-{{ value1 | handle }}" data-value="{{ value | handle }}-{{ value1 | handle }}" type="checkbox" name="id" value="{{ variant1.id }}" inventory="{{ stock }}" quantity="1" variant-price="{{ variant1.price }}"  {% unless variant1.available %}disabled{% endunless %}>
+           
+            <div class="quantity">
+               <span>0</span>
+            </div>
+    
+         <label class="{% if is_color  %}color{% endif %}"  for="multi-swatch-{{ product.handle }}-{{ value | handle }}-{{ value1 | handle }}">
+           {% if is_color  %} 
+           <span class="image"style="background-color:{{ variant1.option2 | handle }};">
+             <span>
+              {% if block.settings.color-image %}<img src="{{ value1 | handle | append: '.jpg'  |  file_img_url: 'medium' }}" />{% endif %}
+             </span>
+           </span>
+           {% endif %}
+           <span class="multiselect-title">{{ variant1.option2 }}</span> 
+           <span class="multiselect_price">{{ variant1.price | money }}</span>
+           </label>
+
+            
+            
+            {% else %}
+            <input id="multi-swatch-{{ product.handle }}-{{ value | handle }}-{{ value1 | handle }}" data-value="{{ value | handle }}-{{ value1 | handle }}" type="radio" name="id-{{ option_index }}-{{ value | handle }}" value="{{ variant1.id }}" inventory="{{ stock }}" quantity="1" {% if optionloop == 0 %} checked{% endif %} >
+            <label class="{% if is_color  %}color{% endif %}" for="multi-swatch-{{ product.handle }}-{{ value | handle }}-{{ value1 | handle }}">
+           {% if is_color  %} 
+           <span class="image" style="background-color:{{ variant1.option2 | handle }};">
+             <span>
+               {% if block.settings.color-image %}<img src="{{ value1 | handle | append: '.jpg'  |  file_img_url: 'medium' }}" />{% endif %}
+             </span>
+           </span>
+           {% endif %}
+              <span class="multiselect-title">{{ variant1.option2 }}</span>
+           </label>
+
+            
+            {% endif %}
+         </div>
+         {% if variant1.available %}
+         <script>
+            var el = document.querySelector('#element-{{ product.handle }}-{{ value | handle }}-{{ value1 | handle }}');
+            var input = el.querySelector('input');                                   
+            //remove soldout add available 
+            el.classList.remove("soldout");
+            input.removeAttribute('disabled');
+         </script>
+         {% endif %}
+         {% assign values1 = values1 | join: ',' %}
+         {% assign values1 = values1 | append: ',' | append: value1 %} 
+         {% assign values1 = values1 | split: ',' %}
+         {% assign optionloop = optionloop | plus: 1 %}
+         {% endif %}    
+         {% endunless %}
+         {% endfor %}
+         {% assign values = values | join: ',' %}
+         {% assign values = values | append: ',' | append: value %} 
+         {% assign values = values | split: ',' %}
+         {% if option_index == lastoption %}
+         <div class="Multiselect-clear">
+            <a href="#">Clear</a>
+         </div>
+         {% endif %}
+      </div>
+   </div>
+   {% endunless %}
+   {% endfor %} 
+   <script>
+      // make visibility it reliant on first option
+           
+             var checkboxes = form.querySelectorAll('.multi-swatch[data-option-index="0"] input');
+             
+         checkboxes.forEach(function(checkbox) {  
+      
+             checkbox.addEventListener( 'click', function() { 
+              if(this.checked) {
+               var el = document.querySelector('.multiselect_wrap #option-{{ product.handle }}-{{ product.id }}-' + this.getAttribute('data-value')); 
+              // Checkbox is checked..
+               el.style.display = "flex";
+                                       
+               var brothers_n_sisters = siblings(el);
+                // if last option lets clear all checkboxes
+               {% if option_index == lastoption %}  
+               brothers_n_sisters.forEach(element => [element.style.display = "none",element.querySelectorAll('.multi-swatch-element').forEach(element2 => [element2.classList.remove('active'),element2.querySelector('input[type="checkbox"]').checked = false])]); 
+               {% else %} 
+               brothers_n_sisters.forEach(element => element.style.display = "none");
+               {% endif %} 
+               }
+              });
+         });
+     
+     
+         
+      
+         
+         quantitycheckboxes  = form.querySelectorAll('.multi-swatch[data-option-index="1"] input');
+         if (quantitycheckboxes) {
+         quantitycheckboxes.forEach(function(quantitycheckbox) { 
+      
+              quantitycheckbox.addEventListener( 'click', function(e) { 
+                                  var swatchelement = this.parentElement;
+              
+                                  // one time animation before active
+                if(!swatchelement.classList.contains('active')) {
+                 swatchelement.classList.add('popgrow'); 
+                 "webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend".split(" ").map(name => swatchelement.removeEventListener(name, popgrow, false));                    
+                 "webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend".split(" ").map(name => swatchelement.addEventListener(name, popgrow, false)); 
+                  function popgrow(e) {
+                    // remove class
+                    swatchelement.classList.remove('popgrow');
+                   // make it one time
+                   "webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend".split(" ").map(name => swatchelement.removeEventListener(name, popgrow, false));  
+                  }
+                }
+                     if(this.checked == true) {
+                     swatchelement.classList.add('active');
+                       if(this.type == "radio") {
+                         var sibs = siblings2(swatchelement);
+                         sibs.forEach(element => element.classList.remove('active')); 
+                       }
+                     }
+                if(this.type == "checkbox") {
+         
+                     var quantitywrap = this.nextElementSibling;
+                     var quantityspan = quantitywrap.getElementsByTagName('span')[0];
+                     var currentquantity = Number(quantityspan.innerHTML);
+                     var inventory =  Number(this.getAttribute('inventory'));
+                     // add quantity     
+                  if(currentquantity < inventory) {
+                     quantityspan.innerHTML = ++currentquantity;
+                     this.setAttribute('quantity', quantityspan.innerHTML);
+                    
+                    // add to total price
+                    var mspriceEl = quantitywrap.nextElementSibling.querySelector('.multiselect_price');
+                    var msprice = parseFloat(mspriceEl.textContent.substring(1));
+                    var priceSymbol = mspriceEl.textContent.charAt(0);
+                     var totalSelectEl = form.parentElement.querySelector('.product-price');
+                    var totalSelect = parseFloat(totalSelectEl.textContent.substring(1));
+                    var newTotal = (Number(msprice) + Number(totalSelect)).toFixed(2);
+                    totalSelectEl.innerHTML = priceSymbol + newTotal;
+                    
+                    
+      
+                  }
+                if(currentquantity > 1) {
+                 quantitywrap.classList.add('pop'); 
+                 "webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend".split(" ").map(name => quantitywrap.removeEventListener(name, pop, false));                    
+                 "webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend".split(" ").map(name => quantitywrap.addEventListener(name, pop, false)); 
+                  function pop(e) {
+                    // remove class
+                    quantitywrap.classList.remove('pop');
+                   // make it one time
+                   "webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend".split(" ").map(name => quantitywrap.removeEventListener(name, pop, false));  
+                  }
+                }
+           
+               
+                if(this.checked === false ) {
+                 this.checked = true; 
+                 e.preventDefault(); 
+                }
+           
+                }
+              });
+         });  
+         }
+         // add clear function
+        {% if option_index == lastoption %} 
+        var clears = form.querySelectorAll('.multi-swatch[data-option-index="1"] .Multiselect-clear');
+        clears.forEach(function(clear) {  
+        clear.addEventListener( 'click', function(e) {
+          quantitycheckboxes.forEach(function(quantitycheckbox) { 
+             quantitycheckbox.checked = false;
+             quantitycheckbox.setAttribute('quantity', 1);
+             quantitycheckbox.nextElementSibling.getElementsByTagName('span')[0].innerHTML = 0;
+             quantitycheckbox.parentElement.classList.remove('active');
+          }); 
+           var totalSelectEl = form.parentElement.querySelector('.product-price');
+          var totalSymbol = totalSelectEl.textContent.charAt(0);
+          totalSelectEl.innerHTML = totalSymbol + '0.00';  
+        });
+        });
+        {% endif %}   
+        
+          
+   </script>  
+</div>
+{% endif %}
+{% if option_index == 2 %}
+<div class="multi-swatch clearfix {% if option_index == lastoption %}last_swatch{% endif %}" data-option-index="{{ option_index }}">
+   <!-- loop out the first option and wrap -->
+   {% assign values2 = '' %}  
+   {% for variant2 in product.variants %}
+   {% assign value2 = variant2.option1 %}
+   {% unless values2 contains value2 %}
+   <!-- this is the first option -->
+   {% if variant2.option1 == value2 %} 
+   <div id="option-{{ product.handle }}-{{ product.id }}-{{ option_index }}-{{ value2 | handle }}" class="option-wrap"  {% unless product.selected_or_first_available_variant.option1 == value2 %}style="display:none;"{% endunless %}> 
+   <!-- loop out the second option and wrap -->
+   {% assign values3 = '' %}  
+   {% for variant3 in product.variants %}
+   {% assign value3 = variant3.option2 %}
+   {% unless values3 contains value3 %}     
+   <!-- this is the second option -->
+   {% if variant3.option2 == value3 %} 
+   <div id="option-{{ product.handle }}-{{ product.id }}-{{ option_index }}-{{ value2 | handle }}-{{ value3 | handle }}" class="option-wrap {% if product.selected_or_first_available_variant.option1 == value2 and product.selected_or_first_available_variant.option2 == value3 and option_index == lastoption %}first{% endif %}"  {% unless product.selected_or_first_available_variant.option2 == value3 %}style="display:none;"{% endunless %}> 
+   <div class="header">{{ option }}  / {{ value2 | title }} / {{ value3 | title }} <span>Choose as many as you like</span></div>
+   <!-- loop out the first option and wrap -->
+   {% assign values4 = '' %}  
+   {% for variant4 in product.variants %}
+   {% assign value4 = variant4.option3 %}
+   {% unless values4 contains value4 %}
+   {% if variant4.option3 == value4 and variant4.option2 == value3  and variant4.option1 == value2 %}  
+   {% if variant4.inventory_management != blank %}
+   {% if variant4.inventory_policy == 'continue' %}
+   {% assign stock = 999 %}
+   {% else %}
+   {% assign stock = variant4.inventory_quantity %}
+   {% endif %}
+   {% else %}
+   {% assign stock = 999 %}
+   {% endif %}
+   <div id="element-{{ product.handle }}-{{ value2 | handle }}-{{ value3 | handle }}-{{ value4 | handle }}" class="multi-swatch-element {% if is_color %}color image {% endif %} value-{{ value | handle }}-{{ value1 | handle }} {% if variant1.available %}available{% else %}soldout{% endif %}">
+
+      <input id="multi-swatch-{{ product.handle }}-{{ value2 | handle }}-{{ value3 | handle }}-{{ value4 | handle }}" data-value="{{ value2 | handle }}-{{ value3 | handle }}-{{ value4 | handle }}" type="checkbox" name="id" value="{{ variant4.id }}" inventory="{{ stock }}" quantity="1" variant-price="{{ variant4.price }}"  {% unless variant4.available %}disabled{% endunless %}>
+
+      <div class="quantity">
+         <span>0</span>
+      </div>
+ 
+           <label class="{% if is_color  %}color{% endif %}" for="multi-swatch-{{ product.handle }}-{{ value2 | handle }}-{{ value3 | handle }}-{{ value4 | handle }}">
+          {% if is_color  %} 
+           <span class="image" style="background:{{ variant4.option3 | handle }};">
+             <span>
+              {% if block.settings.color-image %}<img src="{{ value4 | handle | append: '.jpg'  |  file_img_url: 'medium' }}" />{% endif %}
+             </span>
+           </span>
+           {% endif %}
+             <span class="multiselect-title">{{ variant4.option3 }}</span> 
+             <span class="multiselect_price">{{ variant4.price | money }}</span>
+           </label>
+
+      
+   </div>
+   {% if variant4.available %}
+   <script>
+      var el = document.querySelector('#element-{{ product.handle }}-{{ value2 | handle }}-{{ value3 | handle }}-{{ value4 | handle }}');
+       var input = el.querySelector('input');                                   
+         //remove soldout add available 
+       el.classList.remove("soldout");
+        el.classList.add("available");
+       input.removeAttribute('disabled');
+   </script>
+   {% endif %}
+   {% assign values4 = values4 | join: ',' %}
+   {% assign values4 = values4 | append: ',' | append: value4 %} 
+   {% assign values4 = values4 | split: ',' %}
+   {% assign optionloop = optionloop | plus: 1 %}
+   {% endif %}    
+   {% endunless %}
+   {% endfor %}
+   {% if option_index == lastoption %}
+   <div class="Multiselect-clear">
+      <a href="#">Clear</a>
+   </div>
+   {% endif %}
+</div>
+{% assign values3 = values3 | join: ',' %}
+{% assign values3 = values3 | append: ',' | append: value3 %} 
+{% assign values3 = values3 | split: ',' %}
+{% endif %}
+<script>
+   // make visibility it reliant on first option
+     var checkbox = document.querySelector("#multi-swatch-{{ product.handle }}-{{ value2 | handle }}-{{ value3 | handle }}");
+          checkbox.addEventListener( 'click', function() { 
+           if(this.checked) {
+            var el = document.querySelector('#option-{{ product.handle }}-{{ product.id }}-{{ option_index }}-{{ value2 | handle }}-{{ value3 | handle }}'); 
+           // Checkbox is checked..    
+   
+            el.style.display = "flex";
+            var brothers_n_sisters = siblings(el);
+             // if last option lets clear all checkboxes
+            {% if option_index == lastoption %}  
+
+            brothers_n_sisters.forEach(element => [element.style.display = "none",element.querySelectorAll('input').forEach(element2 => [element2.checked = false, element2.parentElement.classList.remove('active')] )]); 
+            {% else %} 
+            brothers_n_sisters.forEach(element => [element.style.display = "none"]);
+            {% endif %} 
+            }
+           });
+</script>
+{% endunless %}     
+{% endfor %} 
+<!-- END second loop --> 
+</div>
+{% assign values2 = values2 | join: ',' %}
+{% assign values2 = values2 | append: ',' | append: value2 %} 
+{% assign values2 = values2 | split: ',' %}
+{% endif %} 
+{% endunless %}
+{% endfor %}
+<script>
+   var checkboxes = form.querySelectorAll('.multi-swatch[data-option-index="0"] input');
+   checkboxes.forEach(function(checkbox) { 
+    checkbox.addEventListener( 'click', function() { 
+     if(this.checked) {
+       var checkbox1 = this;
+       // 2nd level deep
+      
+      var eltop = document.querySelector('#option-{{ product.handle }}-{{ product.id }}-{{ option_index }}-' + checkbox1.getAttribute('data-value')); 
+      eltop.style.display = "flex";
+      var brothers_n_sisters = siblings(eltop);
+
+      brothers_n_sisters.forEach(element => [element.style.display = "none", element.querySelectorAll('input[type="checkbox"]').forEach(element2 => [element2.checked = false, element2.setAttribute('quantity', 1), element2.parentElement.querySelector('.quantity').getElementsByTagName('span')[0].innerHTML = 0,element2.parentElement.classList.remove('active')] ) ]);
+
+       
+      
+        // 3rd level deep
+        var wrap = document.querySelector('#option-{{ product.handle }}-{{ product.id }}-' + checkbox1.getAttribute('data-value'));                                
+        var checkbox2 = wrap.querySelector(":checked");
+                                 
+          if(checkbox2.checked) {     
+              var elmiddle = document.querySelector('#option-{{ product.handle }}-{{ product.id }}-2-' + checkbox2.getAttribute('data-value') ); 
+              // Checkbox is checked..
+              elmiddle.style.display = "flex";
+                                                  
+           };
+                                                    
+                                                    
+                                                    
+                                                    
+       }
+     });
+    });
+       
+       
+   
+         quantitycheckboxes  = form.querySelectorAll('.multi-swatch[data-option-index="2"] input');
+         if (quantitycheckboxes) {
+         quantitycheckboxes.forEach(function(quantitycheckbox) { 
+              
+              quantitycheckbox.addEventListener( 'click', function(e) { 
+                     var swatchelement = this.parentElement;
+           
+                                  // one time animation before active
+                if(!swatchelement.classList.contains('active')) {
+                 swatchelement.classList.add('popgrow'); 
+                 "webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend".split(" ").map(name => swatchelement.removeEventListener(name, popgrow, false));                    
+                 "webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend".split(" ").map(name => swatchelement.addEventListener(name, popgrow, false)); 
+                  function popgrow(e) {
+                    // remove class
+                    swatchelement.classList.remove('popgrow');
+                   // make it one time
+                   "webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend".split(" ").map(name => swatchelement.removeEventListener(name, popgrow, false));  
+                  }
+                }
+                // End Handle
+                
+                
+                    if(this.checked == true) {
+                     swatchelement.classList.add('active');
+                       if(this.type == "radio") {
+                         var sibs = siblings2(swatchelement);
+                         sibs.forEach(element => element.classList.remove('active')); 
+                       }
+                     }
+                if(this.type == "checkbox") {
+         
+                     var quantitywrap = this.nextElementSibling;
+                     var quantityspan = quantitywrap.getElementsByTagName('span')[0];
+                     var currentquantity = Number(quantityspan.innerHTML);
+                     var inventory =  Number(this.getAttribute('inventory'));
+                     // add quantity     
+                  if(currentquantity < inventory) {
+                     quantityspan.innerHTML = ++currentquantity;
+                     this.setAttribute('quantity', quantityspan.innerHTML);
+                    
+                    // add to total price
+                    var mspriceEl = quantitywrap.nextElementSibling.querySelector('.multiselect_price');
+                    var msprice = parseFloat(mspriceEl.textContent.substring(1));
+                    var priceSymbol = mspriceEl.textContent.charAt(0);
+                  var totalSelectEl = form.parentElement.querySelector('.product-price');
+                    var totalSelect = parseFloat(totalSelectEl.textContent.substring(1));
+                    var newTotal = (Number(msprice) + Number(totalSelect)).toFixed(2);
+                    totalSelectEl.innerHTML = priceSymbol + newTotal;
+                  }
+                if(currentquantity > 1) {
+                 quantitywrap.classList.add('pop'); 
+                 "webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend".split(" ").map(name => quantitywrap.removeEventListener(name, pop, false));                    
+                 "webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend".split(" ").map(name => quantitywrap.addEventListener(name, pop, false)); 
+                  function pop(e) {
+                    // remove class
+                    quantitywrap.classList.remove('pop');
+                   // make it one time
+                   "webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend".split(" ").map(name => quantitywrap.removeEventListener(name, pop, false));  
+                  }
+                }
+ 
+           
+               
+                if(this.checked === false ) {
+                 this.checked = true; 
+                 e.preventDefault(); 
+                }
+     
+                }
+              });
+         });  
+         }
+        // add clear function
+        {% if option_index == lastoption %} 
+        var clears = form.querySelectorAll('.multi-swatch[data-option-index="2"] .Multiselect-clear');
+        clears.forEach(function(clear) {  
+        clear.addEventListener( 'click', function(e) {
+          quantitycheckboxes.forEach(function(quantitycheckbox) { 
+             quantitycheckbox.checked = false;
+             quantitycheckbox.setAttribute('quantity', 1);
+             quantitycheckbox.nextElementSibling.getElementsByTagName('span')[0].innerHTML = 0;
+             quantitycheckbox.parentElement.classList.remove('active');
+          }); 
+           var totalSelectEl = form.parentElement.querySelector('.product-price');
+          var totalSymbol = totalSelectEl.textContent.charAt(0);
+          totalSelectEl.innerHTML = totalSymbol + '0.00';  
+        });
+        });
+          
+    {% endif %}   
+       
+       
+       
+</script>
+</div>
+{% endif %}
+{% endif %}  
+{% endfor %}
+</div>
+<!-- End #Multiselect_product.id -->
+{% endif %}

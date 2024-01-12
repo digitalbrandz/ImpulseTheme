@@ -1,0 +1,323 @@
+<div
+  data-section-id="revslider"
+  data-section-type="revslider-section"
+{% unless section.settings.rev == '' %}
+  data-init="RevSlider_init_revslider"
+{% endunless%}
+  data-align-top="true"
+  class=""
+>
+{% if section.settings.activate_slider != false %}  
+<div id="slick-{{ section.id }}">
+  {% for block in section.blocks %}
+    {% case block.type %}
+      {% when 'Slider' %}
+         <div><a href="{{ block.settings.slide_url }}"><img src="{{ block.settings.slide_image | img_url: '2048x2048' }}" /></a></div>
+       {% endcase %}
+   {% endfor %}
+</div>
+
+<script>
+ var callback{{ section.id }} = function(){
+  // Handler when the DOM is fully loaded
+  if(!window.$.fn.slick) {
+    // add script
+    var script = document.createElement("script");
+    script.type = "text/javascript";   
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/{{ settings.slickjsversion }}/slick.min.js';
+    document.getElementsByTagName("head")[0].appendChild(script);
+    // add style
+    var style = document.createElement("link");
+    style.type = "text/css";  
+    style.rel = "stylesheet";
+    style.href = 'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/{{ settings.slickjsversion }}/slick.min.css';
+    document.getElementsByTagName("head")[0].appendChild(style);
+ 
+  }
+};
+
+if (
+    document.readyState === "complete" ||
+    (document.readyState !== "loading" && !document.documentElement.doScroll)
+) {
+  callback{{ section.id }}();
+} else {
+  document.addEventListener("DOMContentLoaded", callback{{ section.id }});
+}   
+  
+function defer{{section.id}}(method{{section.id}}) {
+    if (window.$.fn.slick) {
+        method{{section.id}}();
+    } else {
+        setTimeout(function() { defer{{section.id}}(method{{section.id}}) }, 10);
+    }
+}
+defer{{section.id}}(function () {  
+  console.log('got it');
+  
+$('#slick-{{ section.id }}').slick({infinite:true,speed:800,slidesToShow:1,adaptiveHeight:true,autoplay:true,autoplaySpeed:5000,arrows: false});
+  
+});
+</script>
+{% else %}
+{% unless section.settings.rev == '' %}
+
+{% assign urls = section.settings.rev | split: '"//' %} 
+
+{% for url in urls %}
+{% assign link = url %} 
+{% assign link = url | split: '"' %} 
+{% assign link = link[0] %} 
+
+
+
+<!-- check for transparent png and declare admin_assets_images_link -->
+{% if link contains '/plugins/revslider/admin/assets/images/' %}
+{% assign link_parts = link | split: '/' %}
+{% capture admin_assets_images_link %}{% for link_part in link_parts %}{% unless forloop.first == true %}/{% endunless %}{% unless forloop.last == true %}{{ link_part }}{% endunless %}{% endfor %}{% endcapture %}
+{% unless admin_assets_images_link contains '//' %}
+{% assign admin_assets_images_link = admin_assets_images_link | prepend: '//' %}
+{% endunless %}
+{% endif %} 
+
+
+<!-- check for svg and declare admin_assets_svg_link -->
+{% if link contains '/svg/' %}
+{% assign link_parts = link | split: '/' %}
+{% capture admin_assets_svg_link %}{% for link_part in link_parts %}{% unless forloop.first == true %}/{% endunless %}{% unless forloop.last == true %}{{ link_part }}{% endunless %}{% endfor %}{% endcapture %}
+{% assign admin_assets_svg_link = admin_assets_svg_link | prepend: '//' %}
+{% unless admin_assets_svg_link contains '//' %}
+{% endunless %}
+{% endif %} 
+
+<!-- check for svg and declare admin_assets_svg_link -->
+{% if link contains '/wp-content/uploads/' %}
+{% assign link_parts = link | split: '/' %}
+{% capture image_link %}{% for link_part in link_parts %}{% unless forloop.first == true %}/{% endunless %}{% unless forloop.last == true %}{{ link_part }}{% endunless %}{% endfor %}{% endcapture %}
+{% unless image_link contains '//' %}
+{% assign image_link = image_link | prepend: '//' %}
+{% endunless %}
+{% endif %} 
+
+{% endfor %}
+
+<!-- get file structure and declare file_structure -->
+{% capture file_structure %}{{ '' | file_url }}{% endcapture %}
+{% assign file_structure = file_structure | split: '?' %} 
+{% assign file_structure = file_structure[0] %} 
+
+<!-- get theme asset structure and declare asset_structure -->
+{% capture theme_file_structure %}{{ 'transparent.png' | asset_url }}{% endcapture %}
+{% assign theme_file_structure = theme_file_structure | split: '?' %} 
+{% assign theme_file_structure = theme_file_structure[0] %} 
+{% assign theme_file_structure = theme_file_structure | split: 'transparent.png' %} 
+{% assign assets_structure = theme_file_structure[0] %} 
+
+
+
+<!-- see if it has close tag -->
+{% assign slider_html_with_script_test = section.settings.rev | split: '<script' %}
+{% assign slider_html_with_script_test = slider_html_with_script_test[1] | slice: 0 %}
+{% if slider_html_with_script_test == '>' %}
+  {% assign fromBody = true %}
+{% else %} 
+  {% assign fromBody = false %}
+{% endif %}
+
+
+
+
+{% assign slider_html_with_script = section.settings.rev | split: '<script type="text/javascript">' %}
+{% assign slider_html = slider_html_with_script[0] | append: '</rs-module-wrap>' %}
+
+
+
+<!-- replace all links -->
+{% if admin_assets_svg_link %}
+{% assign slider_html =  slider_html | replace: admin_assets_svg_link, file_structure %}
+{% endif %}
+{% if image_link %}
+{% assign slider_html =  slider_html | replace: image_link, file_structure %}
+{% endif %}
+{% if admin_assets_images_link %}
+{% assign slider_html =  slider_html | replace: admin_assets_images_link, assets_structure %}
+{% endif %}
+
+
+<!-- get all the duplicates out -->
+{% for i in (1..30) %}
+{% assign png = i | prepend: '-' | append: '.png' %}
+{% assign jpg = i | prepend: '-' | append: '.jpg' %}
+{% assign slider_html =  slider_html | replace: png, '.png' %}
+{% assign slider_html =  slider_html | replace: jpg, '.jpg' %}
+{% endfor %}
+
+
+{% assign slider_html =  slider_html | remove: 'target="_self"' %}
+
+
+{% capture slider_js %}{% for script_part in slider_html_with_script %}{% unless forloop.first == true %}{{ script_part | remove: '<script type="text/javascript">' | remove: '</script>' |  remove: '<script>' | remove: '</rs-module-wrap>' | remove: '<!-- END REVOLUTION SLIDER -->' }}{% endunless %}{% endfor %}{% endcapture %}
+{% unless fromBody %}
+{% endunless %}
+{% assign slider_js_edit = slider_js | split: 'jsFileLocation:"' %}
+{% assign slider_js_edit = slider_js_edit[1] | split: '"' %}
+{% assign slider_js_edit = slider_js_edit[0] %}
+{% assign slider_js = slider_js | remove: slider_js_edit %}
+
+
+
+
+
+
+{% comment %}
+{% if section.settings.wait_slider %}
+{% unless slider_js contains 'waitForInit' %}
+  {% assign slider_js = slider_js | replace: '.revolution({', '.revolution({waitForInit: true,' %}
+{% endunless %}
+{% endif %}
+{% endcomment %}
+
+{% comment %} separate setREVstartSize {% endcomment %}
+{% assign slider_js_split = slider_js | split: 'setREVStartSize' %} 
+{% assign setREVStartSize = slider_js_split[1] %}
+{% assign setREVStartSize = setREVStartSize | split: ';' %}
+{% assign setREVStartSize = setREVStartSize[0] | prepend: 'setREVStartSize' | append: ';' %}
+{% assign slider_js = slider_js | replace: setREVStartSize, '' %}
+
+{{ slider_html }}
+
+
+<script>
+  function setREVStartSize(e){
+			//window.requestAnimationFrame(function() {				 
+				window.RSIW = window.RSIW===undefined ? window.innerWidth : window.RSIW;	
+				window.RSIH = window.RSIH===undefined ? window.innerHeight : window.RSIH;	
+				try {								
+					var pw = document.getElementById(e.c).parentNode.offsetWidth,
+						newh;
+					pw = pw===0 || isNaN(pw) ? window.RSIW : pw;
+					e.tabw = e.tabw===undefined ? 0 : parseInt(e.tabw);
+					e.thumbw = e.thumbw===undefined ? 0 : parseInt(e.thumbw);
+					e.tabh = e.tabh===undefined ? 0 : parseInt(e.tabh);
+					e.thumbh = e.thumbh===undefined ? 0 : parseInt(e.thumbh);
+					e.tabhide = e.tabhide===undefined ? 0 : parseInt(e.tabhide);
+					e.thumbhide = e.thumbhide===undefined ? 0 : parseInt(e.thumbhide);
+					e.mh = e.mh===undefined || e.mh=="" || e.mh==="auto" ? 0 : parseInt(e.mh,0);		
+					if(e.layout==="fullscreen" || e.l==="fullscreen") 						
+						newh = Math.max(e.mh,window.RSIH);					
+					else{					
+						e.gw = Array.isArray(e.gw) ? e.gw : [e.gw];
+						for (var i in e.rl) if (e.gw[i]===undefined || e.gw[i]===0) e.gw[i] = e.gw[i-1];					
+						e.gh = e.el===undefined || e.el==="" || (Array.isArray(e.el) && e.el.length==0)? e.gh : e.el;
+						e.gh = Array.isArray(e.gh) ? e.gh : [e.gh];
+						for (var i in e.rl) if (e.gh[i]===undefined || e.gh[i]===0) e.gh[i] = e.gh[i-1];
+											
+						var nl = new Array(e.rl.length),
+							ix = 0,						
+							sl;					
+						e.tabw = e.tabhide>=pw ? 0 : e.tabw;
+						e.thumbw = e.thumbhide>=pw ? 0 : e.thumbw;
+						e.tabh = e.tabhide>=pw ? 0 : e.tabh;
+						e.thumbh = e.thumbhide>=pw ? 0 : e.thumbh;					
+						for (var i in e.rl) nl[i] = e.rl[i]<window.RSIW ? 0 : e.rl[i];
+						sl = nl[0];									
+						for (var i in nl) if (sl>nl[i] && nl[i]>0) { sl = nl[i]; ix=i;}															
+						var m = pw>(e.gw[ix]+e.tabw+e.thumbw) ? 1 : (pw-(e.tabw+e.thumbw)) / (e.gw[ix]);					
+						newh =  (e.gh[ix] * m) + (e.tabh + e.thumbh);
+					}				
+					if(window.rs_init_css===undefined) window.rs_init_css = document.head.appendChild(document.createElement("style"));					
+					document.getElementById(e.c).height = newh+"px";
+					window.rs_init_css.innerHTML += "#"+e.c+"_wrapper { height: "+newh+"px }";				
+				} catch(e){
+					console.log("Failure at Presize of Slider:" + e)
+				}					   
+			//});
+		  };  
+  function RevSlider_init_revslider(){
+ 	{{ setREVStartSize }} 
+    // start slider                                        
+    {{slider_js }} 
+  }
+  
+</script>
+{% else %}
+<div class="emptyRev">
+ <span>
+ Please Enter Slider HTML/JS 
+ </span>
+</div>
+{% endunless %}
+{% endif %} 
+</div>
+{% schema %}
+  {
+    "name": "Slider 6",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Customize Your Slider"
+      },
+      {
+        "type": "paragraph",
+        "content": "Your Design comes with a premium animation slider thats very difficult to customize, so we added a simpler basic slider you can swap into when you need to display your own simple banners, it can be activated at any time and replace the premium slider for promotions and other ideas. (Please upload at least 1920w by 1200h image"
+      },
+      {
+        "type": "checkbox",
+        "id": "activate_slider",
+        "label": "Activate Basic Slider",
+        "default": false
+      },
+      {
+        "type": "html",
+        "id": "rev",
+        "label": "Slider HTML"
+      },
+      {
+        "type": "checkbox",
+        "id": "wait_slider",
+        "label": "Wait for Page Load",
+        "default": true
+      }
+     ],
+     "blocks": [
+     {
+     "type": "Slider",
+     "name": "Slide",
+     "settings" : [
+      {
+       "id": "slide_image",
+       "type": "image_picker",
+       "label": "Slide Image"
+      },
+      {
+       "id": "slide_url",
+       "type": "url",
+       "label": "Slide Link"
+      }
+     ]
+    } 
+   ],
+  "presets": [
+    {
+      "name": "Animated Slider v6 (new)",
+      "category": "Design"
+    }
+  ]
+  }
+{% endschema %}
+
+{% stylesheet 'scss' %}
+.emptyRev {
+display:flex;
+justify-content:center;
+margin:0 auto;
+padding:100px 20px;
+& span {
+border: 3px solid red;
+padding: 20px 35px;
+}
+}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

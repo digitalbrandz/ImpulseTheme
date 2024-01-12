@@ -1,0 +1,31 @@
+<div class="globo-formbuilder" data-id={{section.settings.form_id}} ></div>
+{% schema %}
+  {
+    "name": "Form",
+    "settings": [
+        {
+          "type": "select",
+          "id": "form_id",
+          "label": "Select form to display",
+          "default": "55586",
+          "options": [{"label":"Certified Stylist Directory","value":"55586"},{"label":"Certified Stylist Directory","value":"55593"}]
+        }
+    ],
+    "presets": [
+        {
+          "name": {
+            "en": "Form"
+          },
+          "category": {
+            "en": "Powerful Contact Form Builder"
+          }
+        }
+      ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

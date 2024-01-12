@@ -1,0 +1,323 @@
+{% style %}
+#shopify-section-{{ section.id }} {
+background-size:cover;  
+{% capture backgroundimage %}{{ section.settings.background_image | img_url: '1024x1024' }}{% endcapture %}                                   
+{% if backgroundimage contains 'no-image' %}
+  {% if section.settings.background_color_2 contains 'transparent' %}
+      background-color:{{ section.settings.background_color }};                            
+  {% else %}     
+    background: -moz-linear-gradient(left, {{ section.settings.background_color }} 0%, {{ section.settings.background_color_2 }} 100%);
+    background: -webkit-linear-gradient(left, {{ section.settings.background_color }} 0%, {{ section.settings.background_color_2 }} 100%);
+    background: linear-gradient(to right, {{ section.settings.background_color }} 0%, {{ section.settings.background_color_2 }} 100%);                            
+  {% endif %}
+{% else %}
+background-image:url({{ section.settings.background_image | img_url: '1024x1024' }}); background-color:{{ section.settings.background_color }};
+{% endif %}      
+}
+
+{% assign hasTitle = false %}
+{% for block in section.blocks %}
+  {% case block.type %}
+    {% when 'Title' %}
+      {% if hasTitle != true %}
+      {% assign hasTitle = true %}
+      {% endif %}
+      {% if section.settings.css != nil %}
+        {% assign css = block.settings.css | replace: '&gt;','>' %}
+        {{ css }}
+      {% endif %}     
+   {% endcase %}
+{% endfor %}
+
+{% if section.settings.css != nil %}
+{% assign css = section.settings.css | replace: '&gt;','>' %}
+{{ css }}
+{% endif %}
+
+{% endstyle %}
+
+
+{% if section.settings.divider %}<div class="section--divider blank bottom">{% endif %}
+
+<div class="page-width">
+  {{ section.blocks.type }}
+  {% if hasTitle == true %}
+    <div class="section-header">
+      {% for block in section.blocks %}
+       {% case block.type %}
+         {% when 'Title' %}
+      <h2 data-aos="hero__animation"
+     data-aos-anchor-placement="top-bottom" class="block-{{ block.id }} {% if forloop.first %}hero__title{% else %}hero__subtitle{% endif %}">
+        <div class="animation-cropper"><div class="animation-contents"> {{ block.settings.title }}</div></div>
+      </h2>
+     {% endcase %}
+     {% endfor %}
+    </div>
+  {% endif %}
+  
+  
+ <div data-section-id="{{ section.id }}"
+  data-section-type="slideshow-section"
+      data-align-top="true"> 
+   
+  <div class="slideshow-wrapper">
+    
+    {% if section.settings.autoplay and section.settings.style == 'bars' and section.blocks.size > 1 %}
+        {% style %}
+          .slick-slider[data-bars][data-autoplay="true"] .slick-dots li.slick-active button::before {
+            animation-duration: {{ section.settings.autoplay_speed | times: 1000 }}ms;
+          }
+        {% endstyle %}
+
+        <button type="button" class="visually-hidden slideshow__pause" data-id="{{ section.id }}" aria-live="polite">
+          <span class="slideshow__pause-stop">
+            {% include 'icon-pause' %}
+            <span class="icon__fallback-text">{{ 'sections.slideshow.pause_slideshow' | t }}</span>
+          </span>
+          <span class="slideshow__pause-play">
+            {% include 'icon-play' %}
+            <span class="icon__fallback-text">{{ 'sections.slideshow.play_slideshow' | t }}</span>
+          </span>
+        </button>
+      {% endif %}
+    
+    
+    
+  <div id="Slideshow-{{ section.id }}"
+        data-autoplay="{{ section.settings.autoplay }}"
+        data-speed="{{ section.settings.autoplay_speed | times: 1000 }}"
+        data-slide-count="1"
+         {% if section.settings.style == 'arrows' %}
+            data-arrows="true"
+          {% endif %}
+          {% if section.settings.style == 'dots' %}
+            data-dots="true"
+          {% endif %}
+          {% if section.settings.style == 'bars' %}
+            data-dots="true"
+            data-bars="true"
+          {% endif %}
+         data-slidetext="true"
+       >    
+      {% for block in section.blocks %}
+      {% case block.type %}    
+      {% when 'Slide' %}  
+             <div
+              {{ block.shopify_attributes }}
+              class="slideshow__slide_blank slideshow__slide--{{ block.id }}"
+              data-id="{{ block.id }}">
+        <div class="media-block feature-row" id="block-{{ block.id }}">
+          <div class="media feature-row__item">   
+            
+            {% if block.settings.youtube_url %}
+            <a class="cover" data-fancybox href="{{ block.settings.youtube_url }}">
+              <svg class="play-icon" version="1.1"
+            xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/"
+            x="0px" y="0px" width="213.7px" height="213.7px" viewBox="0 0 213.7 213.7" enable-background="new 0 0 213.7 213.7"
+            xml:space="preserve">
+                <polygon class='triangle' id="XMLID_18_" fill="none" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="
+               73.5,62.5 148.5,105.8 73.5,149.1 "/>    
+                <circle class='circle' id="XMLID_17_" fill="none"  stroke-width="7" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" cx="106.8" cy="106.8" r="103.3"/>
+              </svg>
+            </a>
+            {% else %}
+            
+            {% endif %}
+            
+            {% if block.settings.mp4_url %}   
+            {% unless block.settings.youtube_url %}
+            <span class="mute">
+              <i>
+                <svg width="931pt" height="931pt" viewBox="0 0 931 931" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                  <g id="#000000ff">
+                  <path fill="#000000" opacity="1.00" d=" M 3.70 24.69 C 9.17 12.55 20.64 2.82 34.02 0.93 C 42.42 -0.04 51.25 0.35 59.04 3.94 C 65.10 6.39 70.17 10.67 74.59 15.40 C 147.55 88.44 220.61 161.38 293.56 234.43 C 295.87 236.53 297.72 239.39 300.68 240.62 C 312.43 229.75 323.41 218.05 335.02 207.03 C 372.14 170.47 409.32 133.99 446.51 97.51 C 467.13 77.13 488.00 57.00 508.44 36.43 C 516.51 29.18 523.61 20.75 532.81 14.84 C 542.27 8.55 553.58 4.35 565.07 5.15 C 574.96 5.71 584.73 10.20 591.00 17.99 C 600.22 29.01 603.10 43.97 602.79 58.00 C 602.86 219.02 602.62 380.04 602.95 541.05 C 602.75 542.99 603.67 544.67 605.11 545.91 C 706.08 646.93 807.08 747.93 908.09 848.91 C 914.48 855.54 922.17 861.34 925.96 870.01 C 935.02 887.72 928.79 911.26 912.43 922.46 C 902.83 929.16 890.37 932.19 878.92 929.15 C 868.62 927.12 859.91 920.61 853.35 912.64 C 573.91 633.09 294.33 353.67 14.90 74.11 C 7.71 67.52 1.93 58.81 0.74 48.96 C 0.18 40.81 -0.03 32.20 3.70 24.69 Z" />
+                  <path fill="#000000" opacity="1.00" d=" M 89.36 298.46 C 93.85 297.58 98.45 297.65 103.00 297.67 C 114.68 297.77 126.36 297.59 138.04 297.72 C 142.94 297.54 145.57 302.33 148.81 305.19 C 299.48 455.87 450.13 606.55 600.83 757.19 C 602.15 758.42 602.92 760.10 602.80 761.94 C 602.79 788.63 602.79 815.32 602.79 842.01 C 602.50 858.61 604.05 875.54 599.76 891.79 C 596.75 902.83 590.84 913.63 581.22 920.20 C 573.09 925.79 562.59 927.14 553.08 925.00 C 542.13 922.51 532.30 916.46 524.00 909.03 C 513.79 899.92 504.43 889.91 494.49 880.52 C 410.67 798.69 326.82 716.88 243.05 635.03 C 241.93 634.15 240.37 634.48 239.07 634.33 C 191.72 634.34 144.37 634.34 97.02 634.35 C 77.76 634.60 60.16 619.30 56.40 600.66 C 55.35 595.17 55.72 589.56 55.69 584.00 C 55.68 505.34 55.70 426.67 55.69 348.00 C 55.73 341.93 55.31 335.75 56.74 329.79 C 60.55 314.34 73.74 301.58 89.36 298.46 Z" />
+                  </g>
+                </svg>
+              </i>
+              Tap for sound
+            </span>
+            {% endunless %}
+            <video playsinline="" autoplay="" preload="auto" loop="loop" muted="muted" onclick="event.preventDefault();">
+              <source src="{{ block.settings.mp4_url }}" type="video/mp4">       
+            </video>
+            {% else %}
+            {% capture image %}{{ block.settings.image | img_url: '1024x1024' }}{% endcapture %}  
+            {% unless image contains 'no-image' %}
+            <img src="{{ block.settings.image | img_url: '1024x1024' }}" />    
+            {% else %}
+            <img src="https://i3.ytimg.com/vi/{{ block.settings.youtube_url.id }}/maxresdefault.jpg" />
+            {% endunless %}
+            {% endif %}
+          </div>
+          <div class="text padding feature-row__text--left">
+            <div class="title">
+              {{ block.settings.title }}
+            </div>
+            {{ block.settings.text }}
+          </div>
+        </div>
+      </div>
+      {% endcase %}    
+      {% endfor %}
+  
+  </div>
+  
+  </div>
+  
+</div>
+</div>
+
+{% if section.settings.divider %}</div>{% endif %}
+
+
+{% schema %}
+  {
+    "name": "Slider Media with Text",
+    "class": "slider-media-with-text-section slider-section",
+    "settings": [
+
+{ "type":"header",
+"content": "Background Colors or Image"
+},
+{
+       "id": "background_image",
+       "type": "image_picker",
+       "label": "Background Image (Optional)"
+},
+{
+       "id": "background_color",
+       "type": "color",
+       "label": "Background Color",
+       "default": "#ffffff"
+},{
+       "id": "background_color_2",
+       "type": "color",
+       "label": "Background Color #2 (Optional Gradient)",
+       "default": "transparent"
+},
+      {
+        "type": "checkbox",
+        "id": "divider",
+        "label": "Show section divider",
+        "default": false
+      },
+{
+        "type": "select",
+        "id": "style",
+        "label": "Slide navigation style",
+        "default": "minimal",
+        "options": [
+          {
+            "value": "minimal",
+            "label": "Minimal"
+          },
+          {
+            "value": "arrows",
+            "label": "Arrows"
+          },
+          {
+            "value": "dots",
+            "label": "Dots"
+          }
+        ]
+      },
+      {
+        "type": "checkbox",
+        "id": "autoplay",
+        "label": "Auto-change slides",
+        "default": true
+      },
+      {
+        "type": "range",
+        "id": "autoplay_speed",
+        "label": "Change images every",
+        "default": 7,
+        "min": 5,
+        "max": 10,
+        "step": 1,
+        "unit": "s"
+      },
+{
+ "type": "header",
+ "content": "Additional Custom CSS"
+},
+{
+        "id": "css",
+        "type": "html",
+        "label": "Custom CSS"
+}],
+"blocks": [
+ 
+{
+     "type": "Title",
+     "name": "Title",
+     "settings" : [
+{
+       "id": "title",
+       "type": "text",
+       "label": "Text"
+},
+{
+ "type": "header",
+ "content": "Additional Custom CSS"
+},
+{
+        "id": "css",
+        "type": "html",
+        "label": "Custom CSS"
+}
+]},
+
+    {
+     "type": "Slide",
+     "name": "Slide",
+     "settings" : [
+{ "type":"header",
+"content": "Media"
+},
+{
+       "id": "image",
+       "type": "image_picker",
+       "label": "Image (Optional)"
+},
+{
+       "id": "mp4_url",
+       "type": "url",
+       "label": "mp4 preview (Optional)"
+},
+{
+"id": "youtube_url",
+"type": "video_url",
+"accept": ["youtube"],
+"label": "Youtube URL",
+"info": "If left empty mute button will be shown instead for on page playback with sound"
+},
+{ "type":"header",
+"content": "Text"
+},
+{
+       "id": "title",
+       "type": "text",
+       "label": "title"
+},
+{
+       "id": "text",
+       "type": "textarea",
+       "label": "Text"
+}
+]}],
+ "presets": [
+    {
+      "name": "Slider Media With Text",
+      "category": "Z Designer"
+    }
+  ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

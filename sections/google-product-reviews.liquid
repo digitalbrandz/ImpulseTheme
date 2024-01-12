@@ -1,0 +1,204 @@
+ {% assign i = 0 %}
+{% for block in section.blocks %}
+ {% case block.type %}
+  {% when 'Review' %}  
+  {% if product.handle == block.settings.google_product %}
+ {% assign i = i | plus: 1 %}
+      {% endif %}
+{% endcase %}
+{% endfor %}
+
+{% unless i == 0 %}
+<div class="google-reviews page-width"
+   data-section-id="{{ section.id }}"
+  data-section-type="slideshow-section"
+  data-align-top="true"  data-aos="fade-up"    data-aos-duration="700"
+    data-aos-easing="ease-out-cubic">
+
+  <h4>Google Reviews</h4>
+  
+  
+<div class="reviews"
+     id="Slideshow-{{ section.id }}"
+          data-autoplay="true"
+          data-speed="9000"
+            data-arrows="true"
+            data-dots="true"
+            data-review="true"
+          data-slide-count="{{ section.blocks.size }}">
+{% for block in section.blocks %}
+ {% case block.type %}
+  {% when 'Review' %}  
+  {% if product.handle == block.settings.google_product %}
+<div class="review">  
+ <div class="review-inner">
+   <div class="review-inner2">
+<div class="top">   
+ <div class="avatar">
+   <div class="wrap">
+   <div class="inner">
+   <img src="{{ block.settings.google_pic | img_url: 'medium' }}" />
+   </div>
+   </div>
+ </div>
+ <div class="right"> 
+ <div class="heading">
+   <div class="name">
+     {{ block.settings.google_name }}
+     <span class="verified">
+     <svg width="650pt" height="650pt" viewBox="0 0 650 650" version="1.1" xmlns="http://www.w3.org/2000/svg">
+<g id="#0090ffff">
+<path fill="#0090ff" opacity="1.00" d=" M 301.57 3.85 C 370.99 -1.36 441.94 16.67 500.21 54.82 C 555.28 90.46 599.03 143.33 623.55 204.19 C 654.84 280.80 654.80 369.58 623.41 446.16 C 599.04 506.42 555.84 558.83 501.44 594.38 C 470.25 614.87 435.46 629.90 399.11 638.42 C 354.60 648.91 307.86 649.79 262.98 641.01 C 197.32 628.39 136.13 594.33 90.43 545.58 C 58.34 511.51 33.78 470.38 19.14 425.92 C 5.14 383.58 0.22 338.30 4.50 293.93 C 8.90 247.10 23.86 201.32 47.91 160.90 C 79.20 107.99 125.99 64.39 180.99 36.94 C 218.47 18.08 259.73 6.84 301.57 3.85 M 288.34 395.30 C 257.04 365.14 225.68 335.06 194.44 304.84 C 174.75 323.80 155.39 343.12 135.83 362.22 C 186.66 414.45 237.49 466.67 288.33 518.89 C 376.44 426.92 464.55 334.95 552.65 242.97 C 531.98 222.01 511.30 201.06 490.63 180.10 C 423.25 251.88 355.75 323.55 288.34 395.30 Z" />
+</g>
+</svg>
+     </span>
+   </div>
+   <span>Google Reviewer</span>
+ </div>
+  
+  
+               <span class="google-stars">
+                 <span class="stars"> 
+                   {% assign google_rating = block.settings.google_rating | plus: 0 %}
+
+                      <span class="star" data-origin="star" data-color="#FFDC00" data-star="2" style="display:inline-block;vertical-align:middle;cursor:pointer;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="14" height="14" viewBox="0 0 1792 1792"><path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="#FFDC00"></path></svg></span>
+               	 
+                     {% if google_rating < 2 %}
+                      <span class="star" data-origin="star_o" data-color="#ccc" data-star="3" style="display:inline-block;vertical-align:middle;cursor:pointer;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="14" height="14" viewBox="0 0 1792 1792"><path d="M1201 1004l306-297-422-62-189-382-189 382-422 62 306 297-73 421 378-199 377 199zm527-357q0 22-26 48l-363 354 86 500q1 7 1 20 0 50-41 50-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="#ccc"></path></svg></span>
+                      {% else %}
+                      <span class="star" data-origin="star" data-color="#FFDC00" data-star="2" style="display:inline-block;vertical-align:middle;cursor:pointer;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="14" height="14" viewBox="0 0 1792 1792"><path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="#FFDC00"></path></svg></span>
+                     {% endif %}
+                   
+                     {% if google_rating < 3 %}
+                     <span class="star" data-origin="star_o" data-color="#ccc" data-star="3" style="display:inline-block;vertical-align:middle;cursor:pointer;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="14" height="14" viewBox="0 0 1792 1792"><path d="M1201 1004l306-297-422-62-189-382-189 382-422 62 306 297-73 421 378-199 377 199zm527-357q0 22-26 48l-363 354 86 500q1 7 1 20 0 50-41 50-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="#ccc"></path></svg></span>
+                     {% else %}
+                     <span class="star" data-origin="star" data-color="#FFDC00" data-star="3" style="display:inline-block;vertical-align:middle;cursor:pointer;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="14" height="14" viewBox="0 0 1792 1792"><path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="#FFDC00"></path></svg></span>
+                     {% endif %}
+                   
+                     {% if google_rating < 4 %}
+                     <span class="star" data-origin="star_o" data-color="#ccc" data-star="4" style="display:inline-block;vertical-align:middle;;cursor:pointer;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="14" height="14" viewBox="0 0 1792 1792"><path d="M1201 1004l306-297-422-62-189-382-189 382-422 62 306 297-73 421 378-199 377 199zm527-357q0 22-26 48l-363 354 86 500q1 7 1 20 0 50-41 50-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="#ccc"></path></svg></span>
+                     {% else %}
+                     <span class="star" data-origin="star" data-color="#FFDC00" data-star="4" style="display:inline-block;vertical-align:middle;cursor:pointer;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="14" height="14" viewBox="0 0 1792 1792"><path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="#FFDC00"></path></svg></span>
+                     {% endif %}
+                   
+                     {% if google_rating < 5 %}
+                     <span class="star" data-origin="star_o" data-color="#ccc" data-star="5" style="display:inline-block;vertical-align:middle;cursor:pointer;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="14" height="14" viewBox="0 0 1792 1792"><path d="M1201 1004l306-297-422-62-189-382-189 382-422 62 306 297-73 421 378-199 377 199zm527-357q0 22-26 48l-363 354 86 500q1 7 1 20 0 50-41 50-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="#ccc"></path></svg></span>
+                     {% else %}
+                     <span class="star" data-origin="star" data-color="#FFDC00" data-star="5" style="display:inline-block;vertical-align:middle;cursor:pointer;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="14" height="14" viewBox="0 0 1792 1792"><path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="#FFDC00"></path></svg></span>
+                     {% endif %}
+                 </span>
+               </span>  
+  </div>
+   </div>
+  
+   <div class="caption">
+     {{ block.settings.google_caption }}
+  </div>
+  
+<div class="footer">
+<svg width="796pt" height="814pt" viewBox="0 0 796 814" version="1.1" xmlns="http://www.w3.org/2000/svg">
+<g id="#ea4335ff">
+<path fill="#ea4335" opacity="1.00" d=" M 393.30 0.00 L 415.27 0.00 C 418.10 0.81 421.13 0.25 423.93 1.18 C 443.72 2.58 463.52 4.36 483.02 8.16 C 555.45 21.44 623.65 56.33 677.10 106.93 C 639.06 144.91 601.04 182.89 563.09 220.95 C 535.88 195.20 502.30 176.06 465.89 166.92 C 411.05 152.90 351.20 158.87 300.59 184.45 C 246.24 211.50 202.95 259.48 180.80 315.92 C 179.06 319.69 177.77 323.64 176.43 327.56 C 144.10 302.61 111.89 277.49 79.59 252.49 C 67.53 243.24 55.71 233.67 43.48 224.67 C 69.68 172.82 106.97 126.59 152.33 90.27 C 193.31 57.32 240.75 32.41 291.21 17.60 C 321.36 8.63 352.59 3.45 383.97 1.60 C 385.96 1.48 387.98 1.45 389.91 0.86 C 390.76 0.65 392.45 0.22 393.30 0.00 Z" />
+<path fill="#ea4335" opacity="1.00" d=" M 35.13 571.09 C 36.54 573.67 37.82 576.31 38.78 579.09 C 37.52 576.44 36.31 573.78 35.13 571.09 Z" />
+</g>
+<g id="#fbbc05ff">
+<path fill="#fbbc05" opacity="1.00" d=" M 43.48 224.67 C 55.71 233.67 67.53 243.24 79.59 252.49 C 111.89 277.49 144.10 302.61 176.43 327.56 C 158.95 378.13 158.99 434.41 176.14 485.06 C 175.98 485.38 175.66 486.01 175.50 486.33 C 132.31 519.87 89.10 553.38 45.92 586.93 C 45.11 587.44 44.24 587.83 43.30 588.09 C 42.89 587.29 42.06 585.69 41.65 584.88 L 41.53 584.66 C 41.50 584.59 41.43 584.45 41.39 584.38 C 40.47 582.63 39.56 580.90 38.78 579.09 C 37.82 576.31 36.54 573.67 35.13 571.09 C 16.61 529.56 5.19 484.86 1.61 439.53 C 1.34 435.88 1.10 432.21 0.39 428.62 C 1.62 424.78 0.33 420.54 0.00 416.60 L 0.00 394.46 C 1.08 381.60 1.72 368.68 3.44 355.88 C 7.55 322.77 15.86 290.17 28.06 259.13 C 29.48 256.10 30.71 252.99 31.80 249.84 C 35.41 241.32 39.21 232.87 43.48 224.67 Z" />
+</g>
+<g id="#4285f4ff">
+<path fill="#4285f4" opacity="1.00" d=" M 28.06 259.13 C 29.21 255.99 30.42 252.88 31.80 249.84 C 30.71 252.99 29.48 256.10 28.06 259.13 Z" />
+<path fill="#4285f4" opacity="1.00" d=" M 405.80 330.63 C 532.99 330.53 660.18 330.64 787.37 330.58 C 791.89 354.13 793.70 378.09 795.46 401.97 C 795.66 412.31 795.70 422.66 795.33 433.00 C 794.15 443.62 793.94 454.33 792.68 464.95 C 785.56 539.68 759.35 613.46 712.73 672.77 C 707.41 679.90 701.23 686.32 695.74 693.28 C 694.82 693.81 693.95 694.42 693.21 695.17 C 688.21 701.14 682.65 706.67 676.75 711.75 C 675.83 712.64 674.61 713.05 673.45 713.52 C 631.08 680.15 588.18 647.45 545.78 614.10 C 588.42 585.79 618.75 539.37 626.78 488.77 C 569.52 488.84 512.26 488.78 455.01 488.80 C 438.58 488.62 422.13 489.16 405.72 488.53 C 405.90 435.90 405.75 383.26 405.80 330.63 Z" />
+</g>
+<g id="#34a853ff">
+<path fill="#34a853" opacity="1.00" d=" M 176.43 327.56 C 177.77 323.64 179.06 319.69 180.80 315.92 C 167.16 351.10 161.00 389.35 164.38 426.99 C 168.26 473.39 185.43 518.62 213.51 555.79 C 236.35 586.38 266.34 611.65 300.51 628.71 C 339.33 648.33 383.62 656.45 426.91 652.91 C 468.91 650.22 510.73 637.76 545.78 614.10 C 588.18 647.45 631.08 680.15 673.45 713.52 C 674.61 713.05 675.83 712.64 676.75 711.75 C 682.65 706.67 688.21 701.14 693.21 695.17 C 693.95 694.42 694.82 693.81 695.74 693.28 C 695.47 696.16 691.95 696.29 690.56 698.42 C 686.76 702.72 682.28 706.40 678.60 710.78 C 677.27 713.98 673.64 714.80 671.38 717.13 C 651.06 735.52 628.47 751.36 604.42 764.49 C 550.48 793.93 489.32 809.00 428.12 811.64 C 417.28 813.05 406.29 812.24 395.39 812.39 C 390.53 812.64 385.77 811.34 380.92 811.42 C 310.85 807.26 242.00 784.34 183.41 745.66 C 122.97 705.96 73.42 649.85 41.65 584.88 C 42.06 585.69 42.89 587.29 43.30 588.09 C 44.24 587.83 45.11 587.44 45.92 586.93 C 89.10 553.38 132.31 519.87 175.50 486.33 C 175.66 486.01 175.98 485.38 176.14 485.06 C 158.99 434.41 158.95 378.13 176.43 327.56 Z" />
+<path fill="#34a853" opacity="1.00" d=" M 0.00 416.60 C 0.33 420.54 1.62 424.78 0.39 428.62 L 0.00 428.89 L 0.00 416.60 Z" />
+<path fill="#34a853" opacity="1.00" d=" M 41.39 584.38 C 41.43 584.45 41.50 584.59 41.53 584.66 C 41.50 584.59 41.43 584.45 41.39 584.38 Z" />
+</g>
+</svg>
+  <span class="date">{{ block.settings.google_date }}</span>
+</div>  
+   </div>
+</div>  
+  </div>
+      {% endif %}
+{% endcase %}
+{% endfor %}
+  </div>
+</div>  
+{% endunless %}
+
+{% schema %}
+  {
+    "name": "Google Reviews",
+    "settings": [],
+  "blocks": [
+    {
+     "type": "Review",
+     "name": "Review",
+     "settings" : [
+      {
+       "id": "google_product",
+       "type": "product",
+       "label": "Product"
+      },
+      {
+       "id": "google_pic",
+       "type": "image_picker",
+       "label": "Image"
+      },
+      {
+        "id": "google_name",
+        "type": "text",
+        "label": "Name"
+      },
+      {
+        "id": "google_caption",
+        "type": "textarea",
+        "label": "Caption"
+      },
+      {
+        "id": "google_date",
+        "type": "text",
+        "label": "how many days\/weeks\/months ago"
+      },
+      {
+        "type": "select",
+        "id": "google_rating",
+        "options": [
+          {
+            "value": "none",
+            "label": "None"
+          },
+          {
+            "value": "1",
+            "label": "1"
+          },
+          {
+            "value": "2",
+            "label": "2"
+          },
+          {
+            "value": "3",
+            "label": "3"
+          },
+          {
+            "value": "4",
+            "label": "4"
+          },
+          {
+            "value": "5",
+            "label": "5"
+          }
+        ],
+        "label": "Rating"
+      }
+     ]
+  }
+ ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

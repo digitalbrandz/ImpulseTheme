@@ -1,0 +1,36 @@
+{% capture 'google_product_reviews_cap' %}
+{% section 'google-product-reviews' %}
+{% endcapture %}
+
+{% capture 'yotpo_cap' %}
+{% section 'yotpo' %}
+{% endcapture %}
+
+
+{% assign yotpo_cap = yotpo_cap | replace: 'data-shopify-editor-section', '' %}
+
+
+{% assign google_product_reviews_cap = google_product_reviews_cap | replace: 'data-shopify-editor-section', '' %}
+
+{% capture 'product_template_cap' %}
+{% section 'product-template' %}
+{% endcapture %}
+
+
+{% assign product_template_content = product_template_cap | replace: "%%GOOGLE-REVIEWS%%", google_product_reviews_cap %}
+
+{% assign product_template_content = product_template_content | replace: "%%YOTPO-REVIEWS%%", yotpo_cap %}
+
+{{product_template_content}}
+
+
+<script>
+  // Override default values of shop.strings for each template.
+  // Alternate product templates can change values of
+  // add to cart button, sold out, and unavailable states here.
+  theme.productStrings = {
+    addToCart: {{ 'products.product.add_to_cart' | t | json }},
+    soldOut: {{ 'products.product.sold_out' | t | json }},
+    unavailable: {{ 'products.product.unavailable' | t | json }}
+  };
+</script>

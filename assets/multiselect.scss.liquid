@@ -1,0 +1,386 @@
+@mixin bp($point) {
+  
+  $bp-small: "(max-width: 350px)";
+  $bp-mobile: "(max-width: 600px)";
+  $bp-mobileup: "(min-width: 600px)";
+  $bp-phablet: "(max-width: 1022px)";
+  $bp-phabletup: "(min-width: 1022px)";
+  $bp-tablet: "(max-width: 1280px)";
+  $bp-tabletup: "(min-width: 1281px)";
+  $bp-laptop: "(max-width: 1600px)";
+  $bp-desktop: "(min-width: 1600px)";
+  @if $point == desktop {
+    @media #{$bp-desktop}  { @content; }
+  }  
+  @else if $point == laptop {
+    @media #{$bp-laptop} { @content; }
+  }
+  @else if $point == tablet {
+    @media #{$bp-tablet} { @content; }
+  }
+  @else if $point == tabletup {
+    @media #{$bp-tabletup} { @content; }
+  }
+  @else if $point == phablet {
+    @media #{$bp-phablet} { @content; }
+  }
+  @else if $point == phabletup {
+    @media #{$bp-phabletup} { @content; }
+  }
+  @else if $point == mobile {
+    @media #{$bp-mobile}  { @content; }
+  }
+  @else if $point == mobileup {
+    @media #{$bp-mobileup} { @content; }
+  }
+  @else if $point == small {
+    @media #{$bp-small}  { @content; }
+  }
+}
+
+
+//color transition
+@mixin transition($attribute, $duration: null) {
+  
+      @if ($duration) {
+       
+    -webkit-transition: $attribute $duration ease;
+    -moz-transition: $attribute $duration ease;
+    transition: $attribute $duration ease;
+    } @else {
+        
+    -webkit-transition: $attribute;
+    -moz-transition: $attribute;
+    transition: $attribute;
+    }
+
+}
+
+@mixin keyframes($animationName) {
+  @-webkit-keyframes #{$animationName} {
+    @content;
+  }
+  @-moz-keyframes #{$animationName} {
+    @content;
+  }
+  @-o-keyframes #{$animationName} {
+    @content;
+  }
+  @keyframes #{$animationName} {
+    @content;
+  }
+}
+@mixin animate($name, $duration, $iteration, $direction) {
+  -webkit-animation-duration: $duration;
+     -moz-animation-duration: $duration;
+       -o-animation-duration: $duration;
+          animation-duration: $duration;
+  -webkit-animation-iteration-count: $iteration;
+     -moz-animation-iteration-count: $iteration;
+       -o-animation-iteration-count: $iteration;
+          animation-iteration-count: $iteration;
+  -webkit-animation-name: $name;
+     -moz-animation-name: $name;
+       -o-animation-name: $name;
+          animation-name: $name;
+  -webkit-animation-direction: $direction;
+     -moz-animation-direction: $direction;
+       -o-animation-direction: $direction;
+          animation-direction: $direction;
+}
+
+@keyframes multiselect-popspin{
+        0% {
+          opacity:0;
+          transform: translateY(100%) rotateY(360deg);
+        
+        }
+        100% {
+        transform: translateY(0) rotateY(0deg);
+          opacity:1;
+       
+        }
+}
+
+@keyframes multiselect-pop{
+        0% {
+          transform: rotateZ(0deg) scale(1);
+        }
+        30% {
+        transform: rotateZ(60deg) scale(1.5);
+        }
+        60% {
+        transform: rotateZ(-60deg) scale(1.5);
+        }
+        100% {
+        transform: rotateZ(0deg) scale(1);
+        }
+}
+
+ @keyframes multiselect-popgrow{
+        0% {
+          transform: scale(1);
+        }
+        50% {
+        transform: scale(1.15);
+        }
+        100% {
+        transform: scale(1);
+        }
+}
+$multiselect-selected: {{ settings.color_button }};
+$multiselect-hover: rgba(167, 192, 251, 0.28);
+$multiselect-quantity-background: {{ settings.color_button }};
+$multiselect-quantity-font: {{ settings.color_button_text }};
+
+form > .variant-wrapper {
+display:none;
+}
+
+.multiselect_wrap {
+width: 100%;
+  & .animate .first .multi-swatch-element {
+   opacity:0;
+    will-change: transform;
+   -webkit-backface-visibility: hidden;
+   -moz-backface-visibility: hidden;
+   -ms-backface-visibility: hidden;
+   backface-visibility: hidden;
+
+   -webkit-perspective: 1000;
+   -moz-perspective: 1000;
+   -ms-perspective: 1000;
+   perspective: 1000;
+  }
+  & .animate.effect .first .multi-swatch-element {
+       -webkit-animation-name: fadeInUp-Multiselect;
+         animation-name: fadeInUp-Multiselect;
+            -webkit-animation-duration: 500ms;
+            animation-duration: 500ms;
+            -webkit-animation-fill-mode: forwards;
+            animation-fill-mode: forwards;
+    @for $i from 1 to 20 {
+     &:nth-of-type(#{$i}) { animation-delay: $i * 0.060s; -webkit-animation-delay: $i * 0.060s;}
+    }
+  }
+  & .multi-swatch {
+ margin-bottom: 20px;   
+  & .option-wrap {
+   display:flex;
+   flex-wrap: wrap;
+   width: 100%; 
+    & .header {
+    width: 100%;
+    flex: 1 1 100%;
+    font-size: 1.25em;
+    /* text-transform: uppercase; */
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    line-height: 1.2;
+    margin-bottom: 12px;  
+      & span {
+    font-size: 70%;
+    font-weight: normal;
+    letter-spacing: normal;
+      }
+    }
+    & .multi-swatch-element {
+    position: relative;
+    padding: 0px 3px;
+    margin: 0 0px 15px;
+    flex-basis: auto;
+    flex-grow: 1;
+    min-width: 25%;
+    @include transition(opacity,0.3s);  
+      &.soldout * {
+           opacity: 0.5;
+      }
+      & label {
+      border: #EDEDED 3px solid;
+      display: block;  
+      margin:0;  
+      padding: 15px 0;
+      @include transition(border-color,0.3s);  
+      @include bp(phablet) {
+       padding: 10px 0;
+      }
+        &:hover {
+        border-color:$multiselect-hover;
+        }
+        & span {
+         text-align: center; 
+         display:block;
+        }
+      }
+      &.popgrow {
+                -webkit-animation: multiselect-popgrow 300ms ease-out;    
+               animation: multiselect-popgrow 300ms ease-out;    
+      animation-delay:unset !important;
+    -webkit-animation-delay: unset !important;
+      } 
+      &.active {
+
+           & label {
+           border-color:$multiselect-selected;
+           @include transition(border-color,0.3s);
+           }
+         & .quantity {
+            &.pop {
+              -webkit-animation: multiselect-pop 500ms ease-out;    
+               animation: multiselect-pop 500ms ease-out;  
+            }
+            & span {
+    animation: multiselect-popspin 300ms ease-out;
+    animation-delay: 300ms;
+    animation-fill-mode: forwards;  
+    -webkit-animation: multiselect-popspin 300ms ease-out;
+    -webkit-animation-delay: 300ms;
+    -webkit-animation-fill-mode: forwards;  
+            }
+         } 
+      }
+      & input {
+      &[type='radio'] {
+         display:none;
+        & ~ label {
+             @include transition(border-color,0.3s);  
+          &:hover {
+          border-color: $multiselect-hover;
+          }
+        }
+        &:checked {
+         & ~ label {
+            border-color:$multiselect-selected;
+            @include transition(border-color,0.3s);
+          } 
+        }
+       }
+       &[type='checkbox'] {
+        display:none;
+       }
+      }
+      & .quantity {
+       position:absolute;
+       pointer-events: none;
+       top: -10px;
+       left: 0px;
+       width: 100%;
+       line-height: normal;
+       text-align: center; 
+       z-index: 9;
+        & span {
+opacity: 0;
+    background: $multiselect-quantity-background;
+    color:$multiselect-quantity-font;      
+padding: 5px 11px;
+    font-size: 85%;
+    display: inline-block;
+    border-radius: 100%;
+          @include bp(phablet) {
+              padding: 3px 8px;
+    font-size: 80%;
+          }
+        }
+      }
+      &.image {
+         min-width: 20%;
+         max-width: 20%;
+         @include bp(phablet) {
+         min-width: 25%;
+         max-width: 25%;
+        }
+         & input[type='radio'], & input[type="checkbox"] {
+           &:checked ~ label {
+              border:none;
+           }
+           & ~ label {
+              border:none;
+              padding:0;
+              & .multiselect-title {
+                margin-top: 6px;
+                 font-size: 80%;
+              }
+            }
+         }
+        & .image {
+    display: block;
+    box-shadow: none;
+    border: 6px solid rgba(255,255,255,0.19);
+    overflow: hidden;
+    border-radius: 20px;
+    @include transition(border-color,0.3s);
+          & span {
+          width: 100%;
+    position: relative;
+    border: none;
+    height: 0;
+    margin-bottom: 0;
+    padding-bottom: 100%;
+    overflow: hidden;
+    display: block;
+& img {
+    min-width: 100%;
+    min-height: 100%;
+    object-fit: cover;
+}
+          }
+        }
+        &.active {
+          & .image {
+           border-color:$multiselect-selected;
+           box-shadow: 0px 5px 8px rgba(0,0,0,0.3);  
+          }
+        }
+        &.popgrow { 
+         -webkit-animation:none; 
+         animation:none;
+          & .image {
+             -webkit-animation: multiselect-popgrow 300ms ease-out;    
+               animation: multiselect-popgrow 300ms ease-out;    
+              animation-delay:unset !important;
+              -webkit-animation-delay: unset !important;
+          }
+        }
+      }
+    }
+    & .Multiselect-clear {
+      display: inline-flex;
+      align-items: center;
+      padding: 20px 20px;
+      padding: 16px 20px;
+      margin: 0 6px 15px;
+      @include bp(phablet) {
+      width: 100%;
+     justify-content: center;
+    padding: 10px 20px;
+    margin: 0 4px 10px;
+      }
+    }
+  }
+    &.last_swatch {
+     margin-bottom: 10px;   
+     @include bp(phablet) {
+       margin-bottom: 0px;
+     }
+    & .multiselect-title {
+    font-size: 1.25em;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    line-height: 1.2;
+      }
+ 
+    }
+  }
+}
+
+
+@keyframes fadeInUp-Multiselect {
+   0% {
+      opacity: 0;
+      transform: translateY(50px);
+   }
+   100% {
+      opacity: 1;
+      transform: translateY(0);
+   }
+}   

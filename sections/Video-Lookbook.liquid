@@ -1,0 +1,73 @@
+<div class="videos row">
+  {% for block in section.blocks %}
+     {% case block.type %}
+      {% when 'Video' %}
+
+   <div class="video grid__item small--one-half medium-up--one-third {% if forloop.first %}first{% endif %} ">
+   {% case block.settings.video.type %}
+      {% when 'youtube' %}
+          <div class="inner">
+            <a class="image" href="{{ block.settings.video }}"  data-fancybox="{{ section.id }}">
+          {% capture image %}{{ block.settings.image | img_url: '1024x1024' }}{% endcapture %}    
+          {% unless image contains 'no-image' %}
+          <img src="{{ block.settings.image | img_url: 'large' }}" />
+          {% else %}
+          <img src="https://i3.ytimg.com/vi/{{ block.settings.video.id }}/maxresdefault.jpg" />
+          {% endunless %}
+              <div class="play"><span><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24"><defs><path id="_2897470551__a" d="M1.905.185l9.365 5.763a1.25 1.25 0 010 2.13L1.905 13.84A1.25 1.25 0 010 12.776V1.25A1.25 1.25 0 011.905.185z"></path></defs><use fill="#000000C" xlink:href="#_2897470551__a" transform="translate(6 5)"></use></svg></span></div>
+            </a>
+            <div class="details">
+              <h5>
+                <a href="{{ block.settings.video }}"  data-fancybox="{{ section.id }}">
+                 {{ block.settings.title }}
+                </a>
+              </h5>
+            </div>
+          </div>
+          {% when 'vimeo' %}
+          <div class="flex-video">
+          <iframe src="https://player.vimeo.com/video/{{ block.settings.video.id }}?title=0&byline=0&portrait=0" width="640" height="640" frameborder="0" allow="fullscreen" allowfullscreen></iframe>
+          </div>
+            {% endcase %}
+            
+        </div>
+       {% endcase %}
+  {% endfor %}  
+</div>
+
+{% schema %}
+  {
+    "name": "Video Lookbook",
+    "settings": [], 
+"blocks": [
+ {
+"type": "Video",
+     "name": "Video",
+     "settings" : [
+      {
+       "id": "title",
+       "type": "text",
+       "label": "Title"
+      },
+     {
+   "id": "video",
+   "type": "video_url",
+   "label": "Youtube or Vimeo URL",
+   "accept": ["youtube", "vimeo"],
+   "placeholder": "https://www.youtube.com/watch?v=6L_k74BOLag"
+},
+{
+       "id": "image",
+       "type": "image_picker",
+       "label": "Preview Image"
+}
+]
+}
+]
+  }
+{% endschema %}
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

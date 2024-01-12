@@ -1,0 +1,345 @@
+{% style %}
+
+
+
+{% for block in section.blocks %}
+  {% case block.type %}
+     {% when 'Section' %}
+
+
+{% assign loadedfonts = '' %}    
+{% assign familyandweight = block.settings.font.family | append: block.settings.font.weight %}
+{% if loadedfonts contains familyandweight %}
+{% else %}
+  {{ block.settings.font | font_face }}  
+{% endif %}   
+{% assign loadedfonts = loadedfonts | append: block.settings.font.family | append: block.settings.font.weight | append: block.settings.font.style | append: '|' %}
+  
+#block-{{ block.id }} .featured-row__title {
+    font-family: {{ block.settings.font.family }}; 
+    font-weight:{{ block.settings.font.weight }}; 
+    font-style:{{ block.settings.font.style }};    
+    font-size:{{ block.settings.fontsize }}px;   
+    color:{{ block.settings.title_color }};
+}  
+  
+#block-{{ block.id }} .featured-row__content {
+color:{{ block.settings.title_color }};
+}
+
+#block-{{ block.id }} .featured-row__button a {
+color:{{ block.settings.button_color }};
+background:{{ block.settings.button_background }};
+}
+
+ #block-{{ block.id }} .feature-row .feature-row__item.main  {
+    flex: 0 1 {{ block.settings.width }}%;
+    line-height: 0;
+   }
+
+ 
+    #block-{{ block.id }} {
+     overflow: hidden; 
+     background-size: cover;
+     background-position: center; 
+     {% if block.settings.backgroundimage != blank %}
+     background-color:{{ block.settings.background1 }};
+     background-image:url({{ block.settings.backgroundimage | img_url: '1024x1024' }}); 
+     {% else %}
+     background: linear-gradient(90deg, {{ block.settings.background1 }} 0%, {{ block.settings.background2 }} 100%);
+     {% endif %}
+     }
+ 
+    @media (max-width:960px) {
+     {% unless block.settings.backgroundimage != blank %}
+      #block-{{ block.id }} {
+         {% if block.settings.layout_mobile == 'bottom' %}
+     background: linear-gradient(180deg, {{ block.settings.background1 }} 0%, {{ block.settings.background2 }} 100%);
+         {% else %}
+     background: linear-gradient(0deg, {{ block.settings.background1 }} 0%, {{ block.settings.background2 }} 100%);
+         {% endif %}
+      }
+     {% endunless %}
+     }
+ 
+
+   {% if block.settings.layout_mobile == 'bottom' %}
+   @media (max-width:960px) {
+     #block-{{ block.id }} .feature-row {
+           flex-flow: column-reverse;
+     }
+  }
+ {% endif %}
+
+  {% endcase %}
+{% endfor %} 
+{% if section.settings.css != nil %}
+{% assign css = section.settings.css | replace: '&gt;','>' %}
+{{ css }}
+{% endif %}
+{% endstyle %}
+
+
+
+
+
+
+
+{% for block in section.blocks %}
+       {% case block.type %}
+        {% when 'Section' %}
+
+
+<div id="block-{{ block.id }}" class="section-wrap">
+{% capture image_layout %} 
+   {% unless block.settings.mp4 != blank %} 
+    <div class="feature-row__item main"   {% if block.settings.layout == 'right' %} data-aos="fade-left" {% else %}data-aos="fade-right" {% endif %} data-aos-duration="700"
+    data-aos-easing="ease-out-cubic">
+      <div style="margin: 0 auto; max-width: {{ block.settings.image_width }}px;">
+        {% if block.settings.image != blank %}
+        
+          <div class="image-wrap"  style="height: 0; padding-bottom: {{ 100 | divided_by: block.settings.image.aspect_ratio }}%;">
+            {%- assign img_url = block.settings.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+            <img class="feature-row__image lazyload"
+                data-src="{{ img_url }}"
+                data-widths="[180, 360, 540, 720, 900, 1080]"
+                data-aspectratio="{{ block.settings.image.aspect_ratio }}"
+                data-sizes="auto"
+                alt="{{ block.settings.image.alt }}">
+          </div>
+        {% else %}
+        {% if block.settings.youtube_url != blank %}
+         <div class="widescreen youtube flex-video">
+           <iframe frameborder="0" scrolling="no" marginheight="0" marginwidth="0"width="100%" height="100%" type="text/html" src="https://www.youtube.com/embed/{{ block.settings.youtube_url.id }}?autoplay=0&fs=0&iv_load_policy=3&showinfo=0&rel=0&cc_load_policy=0&start=0&end=0&origin=http://youtubeembedcode.com"></iframe>
+        </div>
+         {% else %}
+          <div class="image-wrap">
+            {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+          </div>
+        {% endif %}
+        {% endif %}
+      </div>
+    </div>
+   {% else %}
+    <div style="margin: 0 auto;">
+    <div class="feature-row__item main">  
+         <video playsinline="" autoplay="" preload="auto" loop="loop" muted="muted" onclick="event.preventDefault();">
+            <source src="{{ block.settings.mp4 }}" type="video/mp4">
+         </video>
+    </div>
+  </div>
+   {% endunless %} 
+  {% endcapture %}
+
+  <div class="feature-row">
+    {% if block.settings.layout == 'left' %}
+      {{ image_layout }}
+    {% endif %}
+
+    <div class="feature-row__item feature-row__text feature-row__text--{{ block.settings.layout }}">
+
+
+        {% if block.settings.title != blank %}
+         <div>
+          <div class="rte featured-row__title">{{ block.settings.title }}</div>
+         </div>   
+         {% endif %}
+      
+         {% if block.settings.content != blank %}
+         <div>
+          <div class="rte featured-row__content">{{ block.settings.content }}</div>
+         </div>   
+         {% endif %}
+      
+        {% if block.settings.button_label != blank and block.settings.button_link != blank %}
+         <div class="rte featured-row__button">
+            <a class="btn" href="{{  block.settings.button_link }}" >{{  block.settings.button_label }}</a>
+         </div> 
+       {% endif %}
+      
+   
+      
+    </div>
+
+    {% if block.settings.layout == 'right' %}
+      {{ image_layout }}
+    {% endif %}
+  </div>
+</div>
+
+        {% endcase %}
+      {% endfor %} 
+
+{% schema %}
+  {
+    "name": "About Us",
+    "class": "media-with-content",
+    "settings": [{
+ "type": "header",
+ "content": "Additional Custom CSS"
+},
+{
+        "id": "css",
+        "type": "html",
+        "label": "Custom CSS"
+}]
+,"blocks": [
+    {
+     "type": "Section",
+     "name": "Section",
+     "settings" : [{
+ "type": "header",
+ "content": "Choose Media Type"
+},
+{
+       "id": "image",
+       "type": "image_picker",
+       "label": "Image"
+},
+{
+       "id": "mp4",
+       "type": "url",
+       "label": "mp4"
+},
+{
+"id": "youtube_url",
+"type": "video_url",
+"accept": ["youtube"],
+"label": "Youtube URL",
+"info": "If left empty mute button will be shown instead for on page playback with sound"
+},
+{
+ "type": "header",
+ "content": "Media Settings"
+},
+ {
+    "type":   "range",
+    "id":     "width",
+    "min":       10,
+    "max":       100,
+    "step":     1,
+    "unit":      "%",
+    "label":     "Width",
+    "default":   50
+     }, 
+{
+   "type":      "radio",
+   "id":        "layout",
+   "label":     "Alignment",
+   "options": [
+     { "value": "left", "label": "Left" },
+     { "value": "right", "label": "Right" }
+   ],
+   "default":   "left"
+},
+{
+   "type":      "radio",
+   "id":        "layout_mobile",
+   "label":     "Mobile Alignment",
+   "options": [
+     { "value": "top", "label": "Top" },
+     { "value": "bottom", "label": "Bottom" }
+   ],
+   "default":   "top"
+},
+{
+ "type": "header",
+ "content": "Title Settings"
+},
+{
+       "id": "title",
+       "type": "text",
+       "label": "Title"
+},
+ {
+     "type": "font_picker",
+     "id": "font",
+     "label": "Font",
+     "default": "work_sans_n6"
+   },
+  {
+    "type":   "range",
+    "id":     "fontsize",
+    "min":       30,
+    "max":       75,
+    "step":     1,
+    "unit":      "px",
+    "label":     "Font Size",
+    "default":   40
+     },
+{
+       "id": "title_color",
+       "type": "color",
+       "label": "Color",
+       "default": "#000000"
+},
+{
+ "type": "header",
+ "content": "Content Settings"
+},
+{
+       "id": "content",
+       "type": "richtext",
+       "label": "Content"
+},
+{
+ "type": "header",
+ "content": "Background Settings"
+},
+{
+       "id": "background1",
+       "type": "color",
+       "label": "Background Color 1",
+       "default": "#000000"
+},
+{
+       "id": "background2",
+       "type": "color",
+       "label": "Background Color 2",
+       "default": "#000000"
+},
+{
+       "id": "backgroundimage",
+       "type": "image_picker",
+       "label": "Background Image"
+},
+
+{
+ "type": "header",
+ "content": "Button Settings"
+},
+{
+       "id": "button_link",
+       "type": "url",
+       "label": "Link"
+},
+{
+       "id": "button_label",
+       "type": "text",
+       "label": "Label",
+       "default": "Click Here"
+},
+{
+       "id": "button_color",
+       "type": "color",
+       "label": "Color",
+       "default": "#ffffff"
+},
+{
+       "id": "button_background",
+       "type": "color",
+       "label": "Background Color",
+       "default": "#000000"
+}
+
+      ]
+    }
+   ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}
